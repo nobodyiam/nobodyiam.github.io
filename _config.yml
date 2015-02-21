@@ -1,16 +1,16 @@
 # Site settings
-title:       Pixyll
-email:       your_email@example.com
-author:      John Otander
-description: "A simple, beautiful theme for Jekyll that emphasizes content rather than aesthetic fluff."
+title:       nobodyiam's blog
+email:       
+author:      Jason Song 
+description: "nobodyiam's blog"
 baseurl:     ""
-url:         "http://pixyll.com"
+url:         "http://nobodyiam.github.io"
 
 # Google analytics
 google_analytics:
 
 # Optional features
-animated:           false
+animated:           false 
 show_related_posts: false
 show_post_footers:  false
 
@@ -19,12 +19,12 @@ show_post_footers:  false
 disqus_shortname:
 
 # Social icons
-show_social_icons: false
-github_username:
+show_social_icons: nobodyiam 
+github_username: nobodyiam
 stackoverflow_id:
 twitter_username:
 google_plus_id:
-linkedin_username:
+linkedin_username: nobodyiam
 bitcoin_url:
 paypal_url:
 flattr_button:
@@ -34,6 +34,6 @@ markdown:     redcarpet
 redcarpet:
   extensions: ['smart', 'tables', 'with_toc_data']
 permalink:    pretty
-paginate:     3
+paginate:     5
 sass:
   compressed: true
