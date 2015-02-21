@@ -4,7 +4,7 @@ email:
 author:      Jason Song 
 description: "nobodyiam's blog"
 baseurl:     ""
-url:         "http://nobodyiam.github.io"
+url:         "http://nobodyiam.com"
 
 # Google analytics
 google_analytics:
