@@ -3,7 +3,7 @@ layout:     post
 title:      阿波罗App统一认证机制介绍
 date:       2015-03-07 16:00:00
 summary:    本文主要介绍了大众点评的阿波罗App如何借助oAuth 2.0来对Restful服务请求进行统一认证的机制。
-categories: apollo
+categories:
 ---
 
 ##一、简介
