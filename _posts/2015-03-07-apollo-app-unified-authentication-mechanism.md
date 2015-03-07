@@ -50,8 +50,8 @@ categories:
 
 安全认证机制主要涉及以下两块，所以后面会通过这两块的流程图来简要介绍阿波罗统一认证机制的实现。
 
-* App获取accessToken和refreshToken
-* App通过accessToken来调用Restful服务以及通过refreshToken来刷新accessToken
+1. App获取accessToken和refreshToken
+2. App通过accessToken来调用Restful服务以及通过refreshToken来刷新accessToken
 
 ####2.2.1 App获取accessToken和refreshToken
 App启动过程中，会去检查本地是否有认证信息存在，如果没有（第一次启动），就会去服务端请求该信息。
@@ -109,13 +109,13 @@ Efte.ajax({
 });
 {% endhighlight %}
 * Efte.ajax通过jsBridge来调用Native方法（jsBridge涉及到Efte框架，如果感兴趣可以看一下Efte介绍）
-* Native代码收到请求后，会组装HTTP请求，设置其中的Authorization header的值为accessToken，然后发出请求。示意代码如下
+* Native代码收到请求后，会组装HTTP请求，设置其中的Authorization header的值为accessToken，然后发出请求。示例代码如下：
 {% highlight objective-c%}
 AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:url];
 [client setDefaultHeader:@"Authorization" value:[EFTEOAuthViewController accessToken]];
 NSMutableURLRequest *request = [client requestWithMethod:method path:urlString parameters:params];
 {% endhighlight %}
-* 我们要求每个阿波罗后端服务都写一个filter来对请求做校验，不过校验逻辑很简单。首先取出请求中的Authorization信息，然后调用oAuth服务来校验。如果成功，就继续处理请求，如果失败，直接返回HTTP状态码401。示意代码如下：
+* 我们要求每个阿波罗后端服务都写一个filter来对请求做校验，不过校验逻辑很简单。首先取出请求中的Authorization信息，然后调用oAuth服务来校验。如果成功，就继续处理请求，如果失败，直接返回HTTP状态码401。示例代码如下：
 {% highlight java%}
 @Override
 public void doFilter(ServletRequest req, ServletResponse resp,
@@ -138,7 +138,7 @@ public void doFilter(ServletRequest req, ServletResponse resp,
 * 从本地取出refreshToken，然后调用阿波罗oAuth服务
 * 阿波罗oAuth服务通过refreshToken，appId和secret，调用公司oAuth服务来刷新accessToken
 * 如果刷新成功的话，Native端把新的accessToken更新到本地数据空间，解除全局阻塞Restful调用逻辑，同时对队列中的所有请求重发
-* 如果刷新失败的话，就说明refreshToken也过期了（连续3天未使用），需要重新进行oAuth授权。这一过程和3.1的App获取accessToken和refreshToken是一样的，在此就不在赘述了。
+* 如果刷新失败的话，就说明refreshToken也过期了（连续3天未使用），需要重新进行oAuth授权。这一过程和3.1节的**App获取accessToken和refreshToken**过程是一样的，在此就不在赘述了。
 
 #四、小结
 
@@ -146,7 +146,7 @@ public void doFilter(ServletRequest req, ServletResponse resp,
 
 * 安全认证统一实现，维护性和扩展性较好
 	* 整个认证逻辑基本都在Native统一实现，所以后续不管是做维护还是扩展新特性都会比较容易
-* 对业务无侵入，各业务单元接入成本很低
+* 对业务基本无侵入，各业务单元接入成本很低
 	* 安全认证对前端JS透明，完全无感知
-	* 后端接入很轻量，只需实现一个filter即可
+	* 后端接入很轻量，只需实现一个简单的filter逻辑即可
 * 借助oAuth 2.0，安全性有保障
