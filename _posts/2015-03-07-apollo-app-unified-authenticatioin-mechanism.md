@@ -71,31 +71,31 @@ App启动过程中，会去检查本地是否有认证信息存在，如果没�
 
 请求认证信息的详细过程如下：
 
-1. Native新建一个webview，加载oAuth授权URL
+* Native新建一个webview，加载oAuth授权URL
 	* 授权URL中会传入appId和callback url，如
 		* https://xxx.com/oauth2.0/authorize?`appId`=yyy&`callbackUrl`=http://oauth_callback
 	* `appId`是oAuth服务分配给应用的唯一标识符
 	* `callBackUrl`是授权成功后的重定向地址，重定向的时候会带上授权码信息。Native代码通过拦截这个callBackUrl来获得授权码
 	* *`callBackUrl`需要事先在oAuth服务那里注册，后面每次认证的时候，oAuth服务都会做校验，判断传入的callBackUrl是否和注册的一致。*
-2. oAuth服务在授权之前会先要求用户登录，所以它会跳转到SSO来做安全认证
-3. 如果用户已经登陆过，SSO就会跳转回oAuth服务页面。如果没有登陆过，那么就会要求用户登录。
-4. 登录成功后，oAuth服务会根据appId和用户的身份，签发一个授权码。后面我们会通过这个凭证，appId和secret来获取accessToken。需要注意的是，这个凭证是有有效期的，一般配置在几分钟。
-5. oAuth服务把callback url拼上授权码做重定向
-6. Native代码拦截到callback url，解析出授权码。然后调用阿波罗的oAuth服务
-7. 阿波罗oAuth服务通过授权码，appId和secret，就能从公司oAuth服务获取到accessToken和refreshToken并返回给客户端
-8. Native代码把这两个token存储于本地数据空间，以备后面使用
+* oAuth服务在授权之前会先要求用户登录，所以它会跳转到SSO来做安全认证
+* 如果用户已经登陆过，SSO就会跳转回oAuth服务页面。如果没有登陆过，那么就会要求用户登录。
+* 登录成功后，oAuth服务会根据appId和用户的身份，签发一个授权码。后面我们会通过这个凭证，appId和secret来获取accessToken。需要注意的是，这个凭证是有有效期的，一般配置在几分钟。
+* oAuth服务把callback url拼上授权码做重定向
+* Native代码拦截到callback url，解析出授权码。然后调用阿波罗的oAuth服务
+* 阿波罗oAuth服务通过授权码，appId和secret，就能从公司oAuth服务获取到accessToken和refreshToken并返回给客户端
+* Native代码把这两个token存储于本地数据空间，以备后面使用
 
 ###3.2 App调用Restful服务过程
 阿波罗App中有很多业务子模块（如业绩、拜访、客户、协议、团单等），每个业务子模块都会有很多和后端服务交互的过程。由于涉及到了敏感的业务数据和身份信息，所以我们必须要有一种统一的机制来对这一过程加以保障。
 
 另外，阿波罗App是一个混合应用，所有的业务代码都是通过Javascript实现的，尽管JS本身有直接请求Restful服务的能力，我们最后还是决定通过Native来调用HTTP服务。主要原因有以下几点：
 
-* 通过Native调用，可以解决跨域问题
-* 在使用过程中，由于accessToken的时效性（目前配置是1天过期），会涉及到刷新accessToken，而在刷新accessToken的时候，我们需要能阻塞住全局所有的Restful调用，等accessToken刷新完再继续。这个需求通过Native能很简单的实现，而用JS会非常复杂（因为每个页面都是独立的web view）。
+1. 通过Native调用，可以解决跨域问题
+2. 在使用过程中，由于accessToken的时效性（目前配置是1天过期），会涉及到刷新accessToken，而在刷新accessToken的时候，我们需要能阻塞住全局所有的Restful调用，等accessToken刷新完再继续。这个需求通过Native能很简单的实现，而用JS会非常复杂（因为每个页面都是独立的web view）。
 
 App调用Restful服务的详细过程如下：
 
-1. 页面发起ajax请求，由于需要调用Native，我们封装了Efte.ajax组件来统一个Native交互，示例代码如下：
+* 页面发起ajax请求，由于需要调用Native，我们封装了Efte.ajax组件来统一个Native交互，示例代码如下：
 {% highlight javascript%}
 Efte.ajax({
   method: 'GET',
@@ -108,17 +108,14 @@ Efte.ajax({
   }
 });
 {% endhighlight %}
-
-2. Efte.ajax通过jsBridge来调用Native方法（jsBridge涉及到Efte框架，如果感兴趣可以看一下Efte介绍）
-
-3. Native代码收到请求后，会组装HTTP请求，设置其中的Authorization header的值为accessToken，然后发出请求。示意代码如下
+* Efte.ajax通过jsBridge来调用Native方法（jsBridge涉及到Efte框架，如果感兴趣可以看一下Efte介绍）
+* Native代码收到请求后，会组装HTTP请求，设置其中的Authorization header的值为accessToken，然后发出请求。示意代码如下
 {% highlight objective-c%}
 AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:url];
 [client setDefaultHeader:@"Authorization" value:[EFTEOAuthViewController accessToken]];
 NSMutableURLRequest *request = [client requestWithMethod:method path:urlString parameters:params];
 {% endhighlight %}
-
-4. 我们要求每个阿波罗后端服务都写一个filter来对请求做校验，不过校验逻辑很简单。首先取出请求中的Authorization信息，然后调用oAuth服务来校验。如果成功，就继续处理请求，如果失败，直接返回HTTP状态码401。示意代码如下：
+* 我们要求每个阿波罗后端服务都写一个filter来对请求做校验，不过校验逻辑很简单。首先取出请求中的Authorization信息，然后调用oAuth服务来校验。如果成功，就继续处理请求，如果失败，直接返回HTTP状态码401。示意代码如下：
 {% highlight java%}
 @Override
 public void doFilter(ServletRequest req, ServletResponse resp,
@@ -135,20 +132,13 @@ public void doFilter(ServletRequest req, ServletResponse resp,
     filterChain.doFilter(req, resp);
 }
 {% endhighlight %}
-
-5. Native端判断服务返回是否401，如果不是401，就把结果返回给JS端处理。
-
-6. 如果返回的是401，就说明accessToken过期了，执行刷新accessToken逻辑
-
-7. 首先启动全局阻塞Restful调用逻辑，把当前请求以及后续的所有Restful调用都存入队列等待。同时之前已经发出的请求由于accessToken过期也会陆续的回来，也会被放入队列等待。
-
-8. 从本地取出refreshToken，然后调用阿波罗oAuth服务
-
-9. 阿波罗oAuth服务通过refreshToken，appId和secret，调用公司oAuth服务来刷新accessToken
-
-10. 如果刷新成功的话，Native端把新的accessToken更新到本地数据空间，解除全局阻塞Restful调用逻辑，同时对队列中的所有请求重发
-
-11. 如果刷新失败的话，就说明refreshToken也过期了（连续3天未使用），需要重新进行oAuth授权。这一过程和3.1的App获取accessToken和refreshToken是一样的，在此就不在赘述了。
+* Native端判断服务返回是否401，如果不是401，就把结果返回给JS端处理。
+* 如果返回的是401，就说明accessToken过期了，执行刷新accessToken逻辑
+* 首先启动全局阻塞Restful调用逻辑，把当前请求以及后续的所有Restful调用都存入队列等待。同时之前已经发出的请求由于accessToken过期也会陆续的回来，也会被放入队列等待。
+* 从本地取出refreshToken，然后调用阿波罗oAuth服务
+* 阿波罗oAuth服务通过refreshToken，appId和secret，调用公司oAuth服务来刷新accessToken
+* 如果刷新成功的话，Native端把新的accessToken更新到本地数据空间，解除全局阻塞Restful调用逻辑，同时对队列中的所有请求重发
+* 如果刷新失败的话，就说明refreshToken也过期了（连续3天未使用），需要重新进行oAuth授权。这一过程和3.1的App获取accessToken和refreshToken是一样的，在此就不在赘述了。
 
 #四、小结
 
