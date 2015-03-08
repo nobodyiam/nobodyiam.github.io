@@ -1,25 +1,25 @@
 # Site settings
 title:       nobodyiam's blog
-email:       
-author:      Jason Song 
+email:
+author:      Jason Song
 description: "nobodyiam's blog"
 baseurl:     ""
 url:         "http://nobodyiam.com"
 
 # Google analytics
-google_analytics:
+google_analytics: UA-60502829-1
 
 # Optional features
-animated:           false 
+animated:           false
 show_related_posts: false
-show_post_footers:  false
+show_post_footers:  true
 
 # Disqus post comments
 # (leave blank to disable Disqus)
 disqus_shortname:
 
 # Social icons
-show_social_icons: nobodyiam 
+show_social_icons: nobodyiam
 github_username: nobodyiam
 stackoverflow_id:
 twitter_username:
