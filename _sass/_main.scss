@@ -26,6 +26,12 @@ img {
   max-width: 100%;
 }
 
+hr {
+  margin: 20px 0;
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
 .site-wrap {
   min-height: 100%;
   margin-bottom: -120px;
@@ -565,4 +571,8 @@ Copyright (c) 2014 Daniel Eden
 .fade-in-down {
   -webkit-animation-name: fadeInDown;
           animation-name: fadeInDown;
+}
+
+.cc-license {
+  font-size: 0.9rem;
 }

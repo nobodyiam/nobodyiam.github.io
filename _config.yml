@@ -18,11 +18,11 @@ cnzz_analytics:
 # Optional features
 animated:           false
 show_related_posts: false
-show_post_footers:  false
+show_post_footers:  true
 
 # Disqus post comments
 # (leave blank to disable Disqus)
-disqus_shortname:
+disqus_shortname: nobodyiam
 
 # UYAN post comments
 # uyan_id: 2012413
