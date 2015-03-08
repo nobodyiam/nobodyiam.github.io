@@ -46,9 +46,11 @@ categories:
 * **refreshToken**
 	* oAuth服务签发的用户刷新accessToken的凭证，如果连续3天未使用阿波罗App，就会失效
 
-###2.2 认证机制流程图
+###2.2 认证机制概览
+下图为App整体和各项服务之间的依赖关系
+![阿波罗App统一认证整体概览](/images/2015-03-07/apollo-app-overview.png)
 
-安全认证机制主要涉及以下两块，所以后面会通过这两块的流程图来简要介绍阿波罗统一认证机制的实现。
+其中主要涉及以下两个方面，所以后面会通过这两块的流程图来简要介绍阿波罗统一认证机制的实现。
 
 1. App获取accessToken和refreshToken
 2. App通过accessToken来调用Restful服务以及通过refreshToken来刷新accessToken
