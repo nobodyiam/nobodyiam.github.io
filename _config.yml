@@ -7,10 +7,13 @@ baseurl:     ""
 url:         "http://nobodyiam.com"
 
 # Google analytics
-google_analytics: UA-60502829-1
+google_analytics:
 
 # Baidu analytics
 baidu_analytics: c08f630fcfe570643867cf3980d801cc
+
+# CNZZ analytics
+cnzz_analytics:
 
 # Optional features
 animated:           false

@@ -20,6 +20,10 @@ var _hmt = _hmt || [];
 </script>
 {% endif %}
 
+{% if site.cnzz_analytics%}
+<script src="http://s11.cnzz.com/z_stat.php?id={{site.cnzz_analytics}}&web_id={{site.cnzz_analytics}}" language="JavaScript"></script>
+{% endif %}
+
 {% if site.google_analytics %}
 <script>
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
