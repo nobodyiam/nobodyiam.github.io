@@ -9,14 +9,20 @@ url:         "http://nobodyiam.com"
 # Google analytics
 google_analytics: UA-60502829-1
 
+# Baidu analytics
+baidu_analytics: c08f630fcfe570643867cf3980d801cc
+
 # Optional features
 animated:           false
 show_related_posts: false
-show_post_footers:  true
+show_post_footers:  false
 
 # Disqus post comments
 # (leave blank to disable Disqus)
 disqus_shortname:
+
+# UYAN post comments
+uyan_id: 2012413
 
 # Social icons
 show_social_icons: nobodyiam
