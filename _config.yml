@@ -22,7 +22,7 @@ show_post_footers:  false
 disqus_shortname:
 
 # UYAN post comments
-uyan_id: 2012413
+# uyan_id: 2012413
 
 # Social icons
 show_social_icons: nobodyiam
