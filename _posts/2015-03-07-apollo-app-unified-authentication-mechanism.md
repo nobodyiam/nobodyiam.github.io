@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      手机App访问Restful服务的统一认证机制
+title:      手机App的统一认证机制
 date:       2015-03-07 16:00:00
 summary:    本文主要介绍了大众点评的阿波罗App如何借助oAuth 2.0来对Restful服务请求进行统一认证的机制。
 categories:
@@ -140,7 +140,7 @@ public void doFilter(ServletRequest req, ServletResponse resp,
 * 从本地取出refreshToken，然后调用阿波罗oAuth服务
 * 阿波罗oAuth服务通过refreshToken，appId和secret，调用公司oAuth服务来刷新accessToken
 * 如果刷新成功的话，Native端把新的accessToken更新到本地数据空间，解除全局阻塞Restful调用逻辑，同时对队列中的所有请求重发
-* 如果刷新失败的话，就说明refreshToken也过期了（连续3天未使用），需要重新进行oAuth授权。这一过程和3.1节的**App获取accessToken和refreshToken**过程是一样的，在此就不在赘述了。
+* 如果刷新失败的话，就说明refreshToken也过期了（连续3天未使用），需要重新进行oAuth授权。这一过程和3.1节的[**App获取accessToken和refreshToken**](#3.1-app获取accesstoken和refreshtoken)过程是一样的，在此就不在赘述了。
 
 #四、小结
 
