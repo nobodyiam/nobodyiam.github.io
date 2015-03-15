@@ -65,7 +65,7 @@ HTTP/1.1 200 OK
 
 	通过设置JSON对象的code为`500`来告知请求处理失败，调用方可以通过查阅JSON对象的msg字段来获取具体错误信息。
 	
-	一般应用于以下服务自身的错误，如：
+	一般应用于服务自身的异常，如：
 	
 	* 数据库异常
 	* 调用第三方服务异常
@@ -99,7 +99,7 @@ HTTP/1.1 200 OK
 对于HTTP状态码，我们应用所需要处理的只有401。
 其它两个状态码（200，500）都是服务器(nginx和tomcat)默认的行为。
 
-如[手机App访问Restful服务的统一认证机制](http://nobodyiam.com/2015/03/07/apollo-app-unified-authentication-mechanism/)所述，
+如[手机App的统一认证机制](http://nobodyiam.com/2015/03/07/apollo-app-unified-authentication-mechanism/)所述，
 后端服务是通过filter来统一对请求做安全认证的。所以如果发现请求身份验证没通过，只需要在filter中直接设置响应状态为Unauthorized即可。
 
 {% highlight java%}
@@ -129,8 +129,8 @@ public void doFilter(ServletRequest req, ServletResponse resp,
 
 1. 我们在应用中通过ControllerAdvice注册一个全局的Exception handler来捕获所有的应用异常
 2. 在Exception handler中，对捕获到的异常进行处理，把异常转换成如[2.2节](#2.2-json对象状态码)中所约定的格式
-3. 为了能使Exception handler区分出应用错误和校验错误，我们设计了一个`ValidationException`类来存储所有的校验异常
-4. 在业务代码中，只需要专注于自身的业务实现，对于自身或者第三方的应用异常，可以选择捕获后处理或者直接抛出
+3. 为了能使Exception handler区分出服务错误和校验错误，我们设计了一个`ValidationException`类来存储所有的校验异常
+4. 在业务代码中，只需要专注于自身的业务实现，对于自身或者第三方的服务异常，可以选择捕获后处理或者直接抛出
 5. 对于校验错误，只需要构建一个`ValidationException`对象，存入校验信息后抛出即可
 
 以下是具体实现。
@@ -265,7 +265,7 @@ Efte.ajax({
 
 #四、小结
 
-通过这样一套机制，我们解决了阿波罗App和后端服务的统一异常处理问题，同时还收获了以下好处：
+通过这样一套机制，我们解决了阿波罗App调用后端服务的统一异常处理问题，同时还收获了以下好处：
 
 * 异常处理统一实现，维护性和扩展性较好
 	* 在后端统一由`ExceptionHandler`实现
