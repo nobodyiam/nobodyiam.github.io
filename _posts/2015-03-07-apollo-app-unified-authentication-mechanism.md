@@ -97,7 +97,7 @@ App启动过程中，会去检查本地是否有认证信息存在，如果没�
 
 App调用Restful服务的详细过程如下：
 
-* 页面发起ajax请求，由于需要调用Native，我们封装了Efte.ajax组件来统一个Native交互，示例代码如下：
+* 页面发起ajax请求，由于需要调用Native，我们封装了Efte.ajax组件来统一和Native交互，示例代码如下：
 {% highlight javascript%}
 Efte.ajax({
   method: 'GET',
