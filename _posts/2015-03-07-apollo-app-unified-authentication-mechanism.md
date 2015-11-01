@@ -110,7 +110,7 @@ Efte.ajax({
   }
 });
 {% endhighlight %}
-* Efte.ajax通过jsBridge来调用Native方法（jsBridge涉及到Efte框架，如果感兴趣可以看一下Efte介绍）
+* Efte.ajax通过jsBridge来调用Native方法（jsBridge涉及到Efte框架，如果感兴趣可以看一下[Efte介绍](http://nobodyiam.com/2015/06/01/what-is-efte/)）
 * Native代码收到请求后，会组装HTTP请求，设置其中的Authorization header的值为accessToken，然后发出请求。示例代码如下：
 {% highlight objective-c%}
 AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:url];
