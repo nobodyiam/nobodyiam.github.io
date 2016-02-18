@@ -41,7 +41,7 @@ flattr_button:
 # Build settings
 gems :
   - jekyll-paginate
-markdown:     redcarpet
+markdown:     kramdown
 redcarpet:
   extensions: ['smart', 'tables', 'with_toc_data']
 permalink:    pretty
