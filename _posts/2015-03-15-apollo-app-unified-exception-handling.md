@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Restful服务统一异常处理机制
-date:       2015-03-15 16:00:00
+date:       2015-03-15 14:00:00 +0800
 summary:    本文主要介绍了大众点评的阿波罗后端Restful服务的统一异常处理机制。
 categories:
 ---

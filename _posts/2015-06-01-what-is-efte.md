@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Efte简介
-date:       2015-06-01 08:00:00
+date:       2015-06-01 14:00:00 +0800
 summary:    本文主要介绍了大众点评的Efte混合应用框架。
 categories:
 ---
