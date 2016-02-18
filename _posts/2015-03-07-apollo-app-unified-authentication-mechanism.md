@@ -6,16 +6,16 @@ summary:    本文主要介绍了大众点评的阿波罗App如何借助oAuth 2.
 categories:
 ---
 
-##一、简介
+## 一、简介
 阿波罗手机端是所有销售和销售主管（5000多人）使用的销售终端。销售可以使用阿波罗手机随时随地接收通知、查看业绩、录入拜访、维护客户、方案等信息，大大提高销售的工作效率（日活4000多人）。同时，阿波罗手机端还在公司内率先采用混合模式开发app，在提高开发效率的同时也为其他手机团队积累了框架和经验。
 
 目前阿波罗各个服务提供方都提供了Restful服务供手机端调用，由于Restful接口通常是无状态的，所以我们设计了一种借助oAuth 2.0来对请求进行统一认证的机制。
 
 下文就会对这一机制做一个详细的介绍。
 
-##二、概览
+## 二、概览
 
-###2.1 名词解释
+### 2.1 名词解释
 
 在详细介绍之前，先来了解下会涉及到的几个名词
 
@@ -47,7 +47,7 @@ categories:
 * **refreshToken**
 	* oAuth服务签发的用户刷新accessToken的凭证，如果连续3天未使用阿波罗App，就会失效
 
-###2.2 认证机制概览
+### 2.2 认证机制概览
 下图为App整体和各项服务之间的依赖关系
 ![阿波罗App统一认证整体概览](/images/2015-03-07/apollo-app-overview.png)
 
@@ -56,21 +56,21 @@ categories:
 1. App获取accessToken和refreshToken
 2. App通过accessToken来调用Restful服务以及通过refreshToken来刷新accessToken
 
-####2.2.1 App获取accessToken和refreshToken
+#### 2.2.1 App获取accessToken和refreshToken
 App启动过程中，会去检查本地是否有认证信息存在，如果没有（第一次启动），就会去服务端请求该信息。
 
 下图简要描述了App如何获取到accessToken和refreshToken
 ![App获取accessToken和refreshToken](/images/2015-03-07/apollo-app-startup.png)
 
-####2.2.2 App调用Restful服务过程
+#### 2.2.2 App调用Restful服务过程
 阿波罗App中有很多业务子模块（如业绩、拜访、客户、协议、团单等），每个业务子模块都会有很多和后端服务交互的过程。由于涉及到了敏感的业务数据和身份信息，所以我们必须要有一种统一的机制来对这一过程加以保障。
 
 下图简要描述了页面调用Restful服务过程中的认证部分，主要是阿波罗Native如何统一处理认证相关的工作。
 ![App调用Restful服务过程](/images/2015-03-07/apollo-app-call-restful.png)
 
-##三、详细步骤介绍
+## 三、详细步骤介绍
 
-###3.1 App获取accessToken和refreshToken
+### 3.1 App获取accessToken和refreshToken
 在App启动过程中，Native代码会去检查本地是否有认证信息存在。如果有，那么就会直接打开主页面。如果没有（第一次启动），就会去服务端请求该信息。
 
 请求认证信息的详细过程如下：
@@ -89,7 +89,7 @@ App启动过程中，会去检查本地是否有认证信息存在，如果没�
 * 阿波罗oAuth服务通过授权码，appId和secret，就能从公司oAuth服务获取到accessToken和refreshToken并返回给客户端
 * Native代码把这两个token存储于本地数据空间，以备后面使用
 
-###3.2 App调用Restful服务过程
+### 3.2 App调用Restful服务过程
 阿波罗App中有很多业务子模块（如业绩、拜访、客户、协议、团单等），每个业务子模块都会有很多和后端服务交互的过程。由于涉及到了敏感的业务数据和身份信息，所以我们必须要有一种统一的机制来对这一过程加以保障。
 
 另外，阿波罗App是一个混合应用，所有的业务代码都是通过Javascript实现的，尽管JS本身有直接请求Restful服务的能力，我们最后还是决定通过Native来调用HTTP服务。主要原因有以下几点：
@@ -144,7 +144,7 @@ public void doFilter(ServletRequest req, ServletResponse resp,
 * 如果刷新成功的话，Native端把新的accessToken更新到本地数据空间，解除全局阻塞Restful调用逻辑，同时对队列中的所有请求重发
 * 如果刷新失败的话，就说明refreshToken也过期了（连续3天未使用），需要重新进行oAuth授权。这一过程和3.1节的[**App获取accessToken和refreshToken**](#3.1-app获取accesstoken和refreshtoken)过程是一样的，在此就不在赘述了。
 
-#四、小结
+# 四、小结
 
 通过这样一套机制，我们解决了阿波罗App的安全认证问题，同时还收获了以下好处：
 
