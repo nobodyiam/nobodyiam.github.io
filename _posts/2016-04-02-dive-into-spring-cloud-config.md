@@ -160,7 +160,7 @@ private String foo;
 做完以上配置后，启动应用，Config Client就会自动从Config Server获取配置，并无缝支持上面的应用读取配置场景！
 
 ### 3.3 Config Server实现细节
-相信看了前面的demo，我们已经初步领略到了Spring Cloud Config的强大之处，通过短短几行配置就实现了分布式配置！
+看了前面的demo，我们已经初步领略到了Spring Cloud Config的强大之处，通过短短几行配置就实现了分布式配置！
 
 相信大家一定想了解Config Server是如何实现的吧，所以接下来我们继续Dive！
 
