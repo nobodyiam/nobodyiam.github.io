@@ -41,7 +41,7 @@ categories:
 	* 所以对于已有的Spring应用程序的迁移成本非常低，在配置获取的接口上是完全一致的
 
 ## 3. Dive into Spring Cloud Config
-相信大家看到这里，已经对Spring Cloud Config已经有了一个初步的认识，接下来我们就来深入了解下它吧~
+相信大家看到这里，已经对Spring Cloud Config有了一个初步的认识，接下来我们就来深入了解下它吧~
 
 ### 3.1 Overview
 ![Overview](/images/2016-04-02/overview.png)
