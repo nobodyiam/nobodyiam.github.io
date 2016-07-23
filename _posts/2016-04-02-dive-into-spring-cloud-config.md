@@ -2,7 +2,7 @@
 layout:     post
 title:      Dive into Spring Cloud Config
 date:       2016-04-02 14:00:00 +0800
-summary:    本文主要介绍了Spring Cloud Config的实现细节
+summary:    Spring Cloud Config是Spring Cloud系列中提供中心化配置管理的工具，本文主要介绍了Spring Cloud Config的实现细节。
 categories:
 ---
 由于工作原因，最近比较深入的研究了Spring Cloud系列的产品，今天就来重点说说其中一个负责配置的产品 - <a href="http://cloud.spring.io/spring-cloud-config/" target="_blank">Spring Cloud Config</a>。

@@ -2,7 +2,7 @@
 layout:     post
 title:      Dive into Eureka
 date:       2016-06-25 20:00:00 +0800
-summary:    本文主要介绍了Eureka的实现细节
+summary:    Eureka是Netflix开源的一款提供服务注册和发现的产品，本文主要介绍了Eureka的实现细节。
 categories:
 ---
 
