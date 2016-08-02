@@ -260,7 +260,17 @@ Namespace创建完，需要选择在哪些环境和集群下使用
 
 通过这种方式，就实现了对框架类组件的配置管理，框架组件提供方提供配置的默认值，应用如果有特殊需求，可以自行覆盖。
 
-## 4.5 客户端实现原理
+## 4.5 总体设计
+
+![overall-architecture](/images/2016-07-09/overall-architecture.png)
+
+* 基于Eureka和Spring Cloud Netflix提供服务注册和发现
+* Config Service和Admin Service会向meta server注册服务，并保持心跳
+* Portal通过域名访问Meta Server获取Admin Service服务列表（IP+Port），在Portal侧做load balance、错误重试
+* Client通过域名访问Meta Server获取Config Service服务列表（IP+Port），在Client侧做load balance、错误重试
+
+
+## 4.6 客户端设计
 
 ![client-architecture](/images/2016-07-09/client-architecture.png)
 
