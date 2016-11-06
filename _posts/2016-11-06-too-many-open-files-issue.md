@@ -7,7 +7,7 @@ categories:
 ---
 最近业务有一个应用突然报大量错误(Too many open files)导致系统出问题，由于在时间上是用户正好在Apollo配置中心操作了配置发布，所以第一时间就找到我们一起帮忙定位问题。本文详细介绍了问题的排查过程，问题产生的原因以及后续优化的一些措施。
 
-#1. 故障现象
+# 1. 故障现象
 开发在生产环境通过Apollo修改了配置并操作了发布后，发现服务开始大量报错。
 
 通过查看日志，发现redis无法获取到连接了，由于业务依赖于redis提供缓存服务，所以导致接口大量报错。
@@ -38,7 +38,7 @@ categories:
 
 由于该服务是基础服务，有很多上层应用依赖它，所以也导致了一系列连锁反应。情急之下，把所有应用的tomcat都重启了一遍，故障恢复。
 
-#2. 初步分析
+# 2. 初步分析
 我们得到通知的时候，故障已经恢复，也没了现场。所以只能依赖于日志和[CAT](https://github.com/dianping/cat)监控来尝试找到一些线索。
 
 从CAT监控上看，该应用集群共20台机器，不过在Apollo客户端获取到最新配置，准备通知应用该次配置的变化详情时，只有5台通知成功，15台通知失败。
@@ -68,7 +68,7 @@ categories:
 
 联想到前面的报错`Too many open files`，会不会也是由于文件句柄数不够，所以导致JVM无法从文件系统读取jar包，从而导致`NoClassDefFoundError `？
 
-#3. 故障原因
+# 3. 故障原因
 关于该应用出现的问题，种种迹象表明那个时段应该是进程句柄数不够引起的，例如无法从本地加载文件，无法建立redis连接，无法发起网络请求等等。
 
 由于前一阵框架的一个应用也出现了这个问题，当时发现老机器的`Max Open Files`设置是65536，但是新的机器上的`Max Open Files`都被误设置为4096了。
@@ -85,14 +85,14 @@ categories:
 
 由于该应用依赖了redis，所以一旦一段时间内无法连接redis，就会导致请求大量超时，造成请求堆积，进入恶性循环。（好在SOA框架有熔断和限流机制，所以问题影响只持续了几分钟）
 
-#4. 疑团重重
+# 4. 疑团重重
 故障原因算是找到了，各方似乎对这个答案还算满意。不过还是有一个疑问一直在心头萦绕，为啥故障发生时间这么凑巧，就发生在用户通过Apollo发布配置后？
 
 为啥在Apollo配置发布前，系统打开的文件句柄还小于4096，在Apollo配置发布后就超过了？
 
 难道Apollo配置发布后会大量打开文件句柄？
 
-##4.1 Apollo客户端代码分析
+## 4.1 Apollo客户端代码分析
 通过对Apollo客户端代码分析，Apollo在推送配置后，客户端做了以下几件事情：
 
 1. 之前断开的http long polling会重新连接
@@ -102,14 +102,14 @@ categories:
 
 从上面的步骤可以看出，第1步会重新建立之前断开的连接，所以不算新增，第2步和第3步会短暂的各新增一个文件句柄（一次网络请求和一次本地IO），不过执行完后都会释放掉。
 
-##4.2 Web应用尝试重现
+## 4.2 Web应用尝试重现
 代码看了几遍也没看出问题，于是尝试重现问题，所以我临时找了另一个应用(hermes portal)的测试环境做了一个测试，选hermes portal做测试的原因是它和出问题的应用非常相似：
 
 1. 都是Web应用
 2. 都运行了有一段时间（超过一周）
 3. 在上一次启动后，配置都没有发布过（也就是说ConfigChange这个类还没被加载，所以能重现加载类的过程）
 
-###4.2.1 测试结果
+### 4.2.1 测试结果
 
 1. Hermes portal的pid是3823
 2. 在执行配置发布前的进程总打开文件数是511，其中打开的jar文件数是310
@@ -138,7 +138,7 @@ categories:
 
 > 这里的重现实验其实有一个问题，虽然hermes-portal也是通过tomcat启动的应用，但它使用的是tomcat-embed，不是独立的tomcat。
 
-##4.3 Console程序尝试重现：
+## 4.3 Console程序尝试重现：
 
 在本机也尝试重现并更细粒度的捕获进程打开文件信息，所以在本地起了一个apollo demo应用（console application）读取apollo配置，然后通过bash脚本实时打印文件信息。
  
@@ -159,7 +159,7 @@ done
 
 从以上现象看来，Apollo在配置发布后并不会大量增加文件句柄数，虽然洗清了Apollo客户端的嫌疑，但是问题的答案到底是什么呢？该如何解释观测到的种种现象呢？
 
-#5. 柳暗花明
+# 5. 柳暗花明
 尝试自己重现问题无果后，只剩下最后一招了 - 通过应用的程序直接重现问题。
 
 为了不影响应用，我把应用程序的war包连带使用的tomcat在测试环境又独立部署了一份。不想竟然很快就发现了导致问题的原因。
@@ -172,9 +172,9 @@ done
 
 >前面的重现实验最大的问题就是没有完全复现应用出问题时的场景，如果当时就直接测试了独立安装的tomcat（而不是embedded tomcat），问题原因就能更早的发现。
 
-##5.1 重现环境分析
+## 5.1 重现环境分析
 
-###5.1.1 Tomcat刚启动完
+### 5.1.1 Tomcat刚启动完
 
 刚启动完，进程打开的句柄数是443。
 {% highlight sh%}
@@ -182,7 +182,7 @@ lsof -p 31188 | wc -l
 443
 {% endhighlight %}
  
-###5.1.2 Tomcat启动完过了10分钟左右
+### 5.1.2 Tomcat启动完过了10分钟左右
 启动完过了约10分钟，再次查看，发现只剩192个了。仔细比较了一下其中的差异，原来是由于WEB-INF/lib下的jar包句柄全释放了。
 
 {% highlight sh%}
@@ -193,7 +193,7 @@ lsof -p 31188 | grep "WEB-INF/lib" | wc -l
 0
 {% endhighlight %}
  
-###5.1.3 Apollo配置发布后2秒左右
+### 5.1.3 Apollo配置发布后2秒左右
 然后通过Apollo做了一次配置发布，再次查看，发现一下子涨到422了。其中的差异是之前释放的WEB-INF/lib下的jar包句柄又出现了，有228个之多。
 {% highlight sh%}
 lsof -p 31188 | wc -l
@@ -203,7 +203,7 @@ lsof -p 31188 | grep "WEB-INF/lib" | wc -l
 228
 {% endhighlight %}
  
-###5.1.4 Apollo配置发布30秒后
+### 5.1.4 Apollo配置发布30秒后
 过了约30秒后，WEB-INF/lib下的jar包句柄又全部释放了。
 {% highlight sh%}
 lsof -p 31188 | wc -l
@@ -213,24 +213,24 @@ lsof -p 31188 | grep "WEB-INF/lib" | wc -l
 0
 {% endhighlight %}
 
-##5.2 Tomcat WebappClassLoader逻辑
+## 5.2 Tomcat WebappClassLoader逻辑
 通过查看Tomcat的[WebappClassLoader](http://atetric.com/atetric/javadoc/org.apache.tomcat/tomcat-catalina/7.0.72/src-html/org/apache/catalina/loader/WebappClassLoaderBase.html)逻辑，也印证了我们的实验结果。
 
-###5.2.1 加载类逻辑
+### 5.2.1 加载类逻辑
 首先会打开所有的jar文件，然后遍历找到对应的jar去加载
 
 ![tomcat-find-resource-internal](/images/2016-11-06/tomcat-find-resource-internal.png)
 
 ![tomcat-open-jars](/images/2016-11-06/tomcat-open-jars.png)
 
-###5.2.2 关闭jar文件逻辑
+### 5.2.2 关闭jar文件逻辑
 还有一个后台线程会定期去做文件的关闭动作
 
 ![tomcat-background-process](/images/2016-11-06/tomcat-background-process.png)
 
 ![tomcat-close-jars](/images/2016-11-06/tomcat-close-jars.png)
 
-##5.3 故障场景分析
+## 5.3 故障场景分析
 对于Apollo配置推送的场景，会使用到一个之前没有用到的class: `com.ctrip.framework.apollo.model.ConfigChange`，所以会触发tomcat类加载，并进而打开所有的jar文件，从而会导致在很短的时间内进程句柄数升高。（对该应用而言，之前测试下来的数字是228）。
 
 虽然现在无从知晓该应用在出问题前总的文件句柄数，但是从CAT监控可以看到光TCP连接数就在3200+了，再加上一些jdk加载的类库（这部分tomcat不会释放）和本地文件，应该离4096的上限相差不多了。所以这时候如果Tomcat再一下子打开本地228个文件，自然就很容易导致`Too many open files`的问题了。
@@ -241,9 +241,9 @@ lsof -p 31188 | grep "WEB-INF/lib" | wc -l
 
 >这里尚不知晓为啥jedis需要频繁的连接Redis，如果是长连接应该就不会出现这个问题了吧？
 
-#6. 总结
+# 6. 总结
 
-##6.1 问题产生原因
+## 6.1 问题产生原因
 所以，分析到这里，整件事情的脉络就清晰了：
 
 1. 应用的Max Open Files设置成了4096
@@ -252,7 +252,7 @@ lsof -p 31188 | grep "WEB-INF/lib" | wc -l
 4. Jedis在运行过程中需要和Redis重新建立连接，然而由于文件句柄数已经超出上限，所以连接失败
 5. 应用对外的服务由于无法连接Redis，导致请求超时，客户端请求堆积，陷入恶性循环
 
-##6.2 后续优化措施
+## 6.2 后续优化措施
 通过这次问题排查，我们不仅对`Too many open files`这一问题有了更深的认识，同时也简单总结下未来可以优化的地方：
 
 1. **操作系统配置**
