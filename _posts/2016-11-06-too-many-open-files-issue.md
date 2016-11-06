@@ -136,7 +136,7 @@ categories:
 
 ![hermes-portal-lsof-jar-after-apollo](/images/2016-11-06/hermes-portal-lsof-jar-after-apollo-several-seconds.png)
 
-> 这里的重现实验其实有一个问题，虽然hermes-portal也是通过tomcat启动的应用，但它使用的是tomcat-embed，不是独立的tomcat。
+> 这里的重现实验其实有一个问题，虽然hermes-portal也是通过tomcat启动的应用，但它使用的是tomcat-embedded，不是独立的tomcat。
 
 ## 4.3 Console程序尝试重现：
 
@@ -162,7 +162,7 @@ done
 # 5. 柳暗花明
 尝试自己重现问题无果后，只剩下最后一招了 - 通过应用的程序直接重现问题。
 
-为了不影响应用，我把应用程序的war包连带使用的tomcat在测试环境又独立部署了一份。不想竟然很快就发现了导致问题的原因。
+为了不影响应用，我把应用的war包连同使用的tomcat在测试环境又独立部署了一份。不想竟然很快就发现了导致问题的原因。
 
 原因是tomcat对webapp有一套自己的WebappClassLoader，它在启动的过程中会打开jar文件，但是过一段时间就会全部关闭来释放资源。
 
@@ -170,7 +170,7 @@ done
 
 同时，在tomcat的源码中也找到了上述[WebappClassLoader](http://atetric.com/atetric/javadoc/org.apache.tomcat/tomcat-catalina/7.0.72/src-html/org/apache/catalina/loader/WebappClassLoaderBase.html)的逻辑。
 
->前面的重现实验最大的问题就是没有完全复现应用出问题时的场景，如果当时就直接测试了独立安装的tomcat（而不是embedded tomcat），问题原因就能更早的发现。
+>之前的重现实验最大的问题就是没有完全复现应用出问题时的场景，如果当时就直接测试了独立安装的tomcat（而不是embedded tomcat），问题原因就能更早的发现。
 
 ## 5.1 重现环境分析
 
@@ -265,7 +265,7 @@ lsof -p 31188 | grep "WEB-INF/lib" | wc -l
 
 3. **中间件客户端及早初始化**
 
-	鉴于Tomcat的类加载机制，中间件客户端应该在程序启动的时候做好初始化动作，同时把所有的类都加载一遍，从而避免后续会产生这类诡异的问题。
+	鉴于Tomcat的类加载机制，中间件客户端应该在程序启动的时候做好初始化动作，同时把所有的类都加载一遍，从而避免后续在运行过程中由于加载类而产生一些诡异的问题。
 
 4. **遇到故障，不要慌张，保留现场**
 	
