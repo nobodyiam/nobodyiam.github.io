@@ -1,7 +1,7 @@
 ---
 layout:     post
 title:      Tomcat应用报Too many open files的故障排查
-date:       2016-11-06 16:00:00 +0800
+date:       2016-11-06 15:00:00 +0800
 summary:    最近业务有一个应用突然报大量错误(Too many open files)导致系统出各种问题，由于在时间上是用户正好在Apollo配置中心操作了配置发布，所以第一时间就找到我们一起帮忙定位问题。本文详细介绍了问题的排查过程，问题产生的原因以及后续优化的一些措施。
 categories:
 ---
