@@ -12,7 +12,7 @@ categories:
 
 在正式分享之前，先简单介绍下背景。
 
-[Apollo配置中心](https://github.com/ctripcorp/apollo)是携程框架研发部（笔者供职部门）推出的配置管理平台，提供了配置中心化管理、配置修改后实时推送等功能。
+Apollo配置中心([https://github.com/ctripcorp/apollo](https://github.com/ctripcorp/apollo))是携程框架研发部（笔者供职部门）推出的配置管理平台，提供了配置中心化管理、配置修改后实时推送等功能。
 
 有一个Java Web应用接入了Apollo配置中心，所以用户在配置中心修改完配置后，配置中心就会实时地把最新的配置推送给该应用。
 
