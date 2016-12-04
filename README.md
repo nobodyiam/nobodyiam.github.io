@@ -1,1 +1,1 @@
-基于[pixyll](https://github.com/johnotander/pixyll)的个人博客 。
+基于[pixyll](https://github.com/johnotander/pixyll)的个人博客。
