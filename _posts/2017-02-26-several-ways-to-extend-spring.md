@@ -138,11 +138,11 @@ public class BeanParser extends AbstractSingleBeanDefinitionParser {
 
 首先需要在META-INF目录下创建一个spring.handlers文件，来配置我们自定义的XML Schema Namespace到我们自定义的NamespaceHandler映射关系。
 
-*注意，`:`需要转义*
-
 {% highlight bash %}
 http\://www.ctrip.com/schema/apollo=com.ctrip.framework.apollo.spring.config.NamespaceHandler
 {% endhighlight %}
+
+*注意，`:`需要转义*
 
 ### 2.3.2 META-INF/spring.schemas
 
@@ -153,6 +153,8 @@ http\://www.ctrip.com/schema/apollo=com.ctrip.framework.apollo.spring.config.Nam
 http\://www.ctrip.com/schema/apollo-1.0.0.xsd=/META-INF/apollo-1.0.0.xsd
 http\://www.ctrip.com/schema/apollo.xsd=/META-INF/apollo-1.0.0.xsd
 {% endhighlight %}
+
+*注意，`:`需要转义*
 
 ## 2.4 样例目录结构
 
