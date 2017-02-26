@@ -95,7 +95,7 @@ Apollo的自定义BeanDefinitionParser主要做了两件事情：
 2. 向Spring注册Bean：`ConfigPropertySourcesProcessor`，这个bean后面会实际处理用户配置的namespace和order，从而完成配置注入到Spring中的功能
 
 {% highlight java %}
-static class BeanParser extends AbstractSingleBeanDefinitionParser {
+public class BeanParser extends AbstractSingleBeanDefinitionParser {
     @Override
     protected Class<?> getBeanClass(Element element) {
       return ConfigPropertySourcesProcessor.class;
@@ -140,7 +140,7 @@ static class BeanParser extends AbstractSingleBeanDefinitionParser {
 
 *注意，`:`需要转义*
 
-{% highlight properties %}
+{% highlight bash %}
 http\://www.ctrip.com/schema/apollo=com.ctrip.framework.apollo.spring.config.NamespaceHandler
 {% endhighlight %}
 
@@ -149,7 +149,7 @@ http\://www.ctrip.com/schema/apollo=com.ctrip.framework.apollo.spring.config.Nam
 我们还需要在META-INF目录下创建一个spring.schemas，来配置我们自定义的XML Schema地址到实际Jar包中的classpath映射关系（避免Spring真的去服务器上下载不存在的文件）。
 
 为了简单起见，Apollo把实际的schema文件放在了META-INF目录下。
-{% highlight properties %}
+{% highlight bash %}
 http\://www.ctrip.com/schema/apollo-1.0.0.xsd=/META-INF/apollo-1.0.0.xsd
 http\://www.ctrip.com/schema/apollo.xsd=/META-INF/apollo-1.0.0.xsd
 {% endhighlight %}
