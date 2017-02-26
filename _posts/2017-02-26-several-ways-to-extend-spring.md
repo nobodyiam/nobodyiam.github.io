@@ -344,4 +344,4 @@ public class ApolloAnnotationProcessor implements BeanPostProcessor {
 本文简单介绍了扩展Spring的几种方式，下面简单小结一下，希望对大家有所帮助：
 
 1. 通过基于XML和基于Java的配置扩展，可以使用户通过Spring使用我们研发的组件，提供很好的易用性。
-2. 通过Spring中最常用的两个扩展点：`BeanFactoryPostProcessor`和`BeanPostProcessor`，可以使我们的程序逻辑和Spring容器紧密合作，无缝插入到用户bean的生命周期中，发挥更强大的作用。
+2. 通过Spring容器最常用的两个扩展点：`BeanFactoryPostProcessor`和`BeanPostProcessor`，可以使我们的程序逻辑和Spring容器紧密合作，无缝插入到用户bean的生命周期中，发挥更强大的作用。
