@@ -97,38 +97,38 @@ Apollo的自定义BeanDefinitionParser主要做了两件事情：
 
 ```java
 public class BeanParser extends AbstractSingleBeanDefinitionParser {
-    @Override
-    protected Class<?> getBeanClass(Element element) {
-      return ConfigPropertySourcesProcessor.class;
-    }
-
-    @Override
-    protected boolean shouldGenerateId() {
-      return true;
-    }
-
-    @Override
-    protected void doParse(Element element, BeanDefinitionBuilder builder) {
-      String namespaces = element.getAttribute("namespaces");
-      //default to application
-      if (Strings.isNullOrEmpty(namespaces)) {
-        namespaces = ConfigConsts.NAMESPACE_APPLICATION;
-      }
-
-      int order = Ordered.LOWEST_PRECEDENCE;
-      String orderAttribute = element.getAttribute("order");
-
-      if (!Strings.isNullOrEmpty(orderAttribute)) {
-        try {
-          order = Integer.parseInt(orderAttribute);
-        } catch (Throwable ex) {
-          throw new IllegalArgumentException(
-              String.format("Invalid order: %s for namespaces: %s", orderAttribute, namespaces));
-        }
-      }
-      PropertySourcesProcessor.addNamespaces(NAMESPACE_SPLITTER.splitToList(namespaces), order);
-    }
+  @Override
+  protected Class<?> getBeanClass(Element element) {
+    return ConfigPropertySourcesProcessor.class;
   }
+
+  @Override
+  protected boolean shouldGenerateId() {
+    return true;
+  }
+
+  @Override
+  protected void doParse(Element element, BeanDefinitionBuilder builder) {
+    String namespaces = element.getAttribute("namespaces");
+    //default to application
+    if (Strings.isNullOrEmpty(namespaces)) {
+      namespaces = ConfigConsts.NAMESPACE_APPLICATION;
+    }
+
+    int order = Ordered.LOWEST_PRECEDENCE;
+    String orderAttribute = element.getAttribute("order");
+
+    if (!Strings.isNullOrEmpty(orderAttribute)) {
+      try {
+        order = Integer.parseInt(orderAttribute);
+      } catch (Throwable ex) {
+        throw new IllegalArgumentException(
+          String.format("Invalid order: %s for namespaces: %s", orderAttribute, namespaces));
+      }
+    }
+    PropertySourcesProcessor.addNamespaces(NAMESPACE_SPLITTER.splitToList(namespaces), order);
+  }
+}
 ```
 
 ## 2.3 注册Spring handler和Spring schema
