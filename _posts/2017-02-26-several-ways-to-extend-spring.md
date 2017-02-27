@@ -10,7 +10,7 @@ Spring现在几乎已经成为了Java开发的必备框架，在享受Spring框�
 
 [Apollo配置中心](https://github.com/ctripcorp/apollo)的Java客户端在前一段时间也提供了和Spring整合的功能，详细代码改动可以参考[PR543](https://github.com/ctripcorp/apollo/pull/543)。
 
-Apollo既支持比较传统的基于XML的配置，也支持目前比较流行的基于Java的配置。下面就以Apollo为例，简单介绍一下扩展Spring的几种方式。
+Apollo既支持传统的基于XML的配置，也支持目前比较流行的基于Java的配置。下面就以Apollo为例，简单介绍一下扩展Spring的几种方式。
 
 # 2. 基于XML配置的扩展
 
@@ -265,7 +265,7 @@ public class AppConfig {}
 
 前面两节简单介绍了扩展Spring的两种方式：基于XML和基于Java的配置。通过这两种方式，我们可以在运行时收集到用户的配置信息，同时向Spring注册实际处理这些配置信息的Bean。
 
-但这些注册进去的Bean实际上是如何工作的呢？我们通过什么方式能使我们的程序逻辑和Spring的容器紧密合作并无缝插入到用户bean的生命周期中呢？
+但这些注册进去的Bean实际上是如何工作的呢？我们通过什么方式能使我们的程序逻辑和Spring的容器紧密合作，并无缝插入到用户bean的生命周期中呢？
 
 这里简单介绍Spring容器最常用的两个扩展点：`BeanFactoryPostProcessor`和`BeanPostProcessor`。
 
@@ -275,7 +275,7 @@ public class AppConfig {}
 
 这个方法会被Spring在容器初始化过程中调用，调用时机是所有bean的定义信息都已经初始化好，但是这些bean还没有实例化。
 
-Apollo就利用这个时间点把配置信息注入到Spring Property Sources中，从而用户的bean在实际实例化时，所有需要的配置信息已经准备好了。
+Apollo就利用这个时间点把配置信息注入到Spring Property Sources中，从而用户的bean在真正实例化时，所有需要的配置信息已经准备好了。
 
 {% highlight java %}
 public class PropertySourcesProcessor implements BeanFactoryPostProcessor {
@@ -299,8 +299,8 @@ public class PropertySourcesProcessor implements BeanFactoryPostProcessor {
 
 `BeanPostProcessor`提供了两个方法：`postProcessBeforeInitialization`和`postProcessAfterInitialization`，主要针对bean初始化提供扩展。
 
-* `postProcessBeforeInitialization`会在bean实例化之后、初始化（如afterPropertiesSet方法）之前被调用。
-* `postProcessAfterInitialization`则在bean初始化之后被调用。
+* `postProcessBeforeInitialization`会在每一个bean实例化之后、初始化（如afterPropertiesSet方法）之前被调用。
+* `postProcessAfterInitialization`则在每一个bean初始化之后被调用。
 
 我们常用的`@Autowired`注解就是通过`postProcessBeforeInitialization`实现的（AutowiredAnnotationBeanPostProcessor）。
 
