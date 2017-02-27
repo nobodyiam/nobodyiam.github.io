@@ -83,6 +83,7 @@ public class NamespaceHandler extends NamespaceHandlerSupport {
   public void init() {
     registerBeanDefinitionParser("config", new BeanParser());
   }
+}
 ```
 
 ### 2.2.2 自定义BeanDefinitionParser
