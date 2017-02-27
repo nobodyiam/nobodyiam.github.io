@@ -24,7 +24,7 @@ Apollo提供了向Spring Property Sources注入配置的功能，所以schema中
 
 下面就是Apollo的schema示例，可以看到xml的配置节点名字是`config`，并且有两个可选属性：`namespaces`和`order`，类型分别是`string`和`int`。
 
-{% highlight xml%}
+```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <xsd:schema xmlns="http://www.ctrip.com/schema/apollo"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -66,7 +66,7 @@ Apollo提供了向Spring Property Sources注入配置的功能，所以schema中
         </xsd:complexType>
     </xsd:element>
 </xsd:schema>
-{% endhighlight %}
+```
 
 ## 2.2 创建NamespaceHandler
 
@@ -77,13 +77,13 @@ Apollo提供了向Spring Property Sources注入配置的功能，所以schema中
 
 下面的示例告诉Spring由我们自定义的的`BeanParser`来处理xml中的`config`节点信息。
 
-{% highlight java %}
+```java
 public class NamespaceHandler extends NamespaceHandlerSupport {
   @Override
   public void init() {
     registerBeanDefinitionParser("config", new BeanParser());
   }
-{% endhighlight %}
+```
 
 ### 2.2.2 自定义BeanDefinitionParser
 
@@ -94,7 +94,7 @@ Apollo的自定义BeanDefinitionParser主要做了两件事情：
 1. 记录用户配置的namespace和order
 2. 向Spring注册Bean：`ConfigPropertySourcesProcessor`，这个bean后面会实际处理用户配置的namespace和order，从而完成配置注入到Spring中的功能
 
-{% highlight java %}
+```java
 public class BeanParser extends AbstractSingleBeanDefinitionParser {
     @Override
     protected Class<?> getBeanClass(Element element) {
@@ -128,7 +128,7 @@ public class BeanParser extends AbstractSingleBeanDefinitionParser {
       PropertySourcesProcessor.addNamespaces(NAMESPACE_SPLITTER.splitToList(namespaces), order);
     }
   }
-{% endhighlight %}
+```
 
 ## 2.3 注册Spring handler和Spring schema
 
@@ -138,9 +138,9 @@ public class BeanParser extends AbstractSingleBeanDefinitionParser {
 
 首先需要在META-INF目录下创建一个spring.handlers文件，来配置我们自定义的XML Schema Namespace到我们自定义的NamespaceHandler映射关系。
 
-{% highlight bash %}
+```bash
 http\://www.ctrip.com/schema/apollo=com.ctrip.framework.apollo.spring.config.NamespaceHandler
-{% endhighlight %}
+```
 
 *注意，`:`需要转义*
 
@@ -149,10 +149,11 @@ http\://www.ctrip.com/schema/apollo=com.ctrip.framework.apollo.spring.config.Nam
 我们还需要在META-INF目录下创建一个spring.schemas，来配置我们自定义的XML Schema地址到实际Jar包中的classpath映射关系（避免Spring真的去服务器上下载不存在的文件）。
 
 为了简单起见，Apollo把实际的schema文件放在了META-INF目录下。
-{% highlight bash %}
+
+```bash
 http\://www.ctrip.com/schema/apollo-1.0.0.xsd=/META-INF/apollo-1.0.0.xsd
 http\://www.ctrip.com/schema/apollo.xsd=/META-INF/apollo-1.0.0.xsd
-{% endhighlight %}
+```
 
 *注意，`:`需要转义*
 
@@ -166,7 +167,7 @@ http\://www.ctrip.com/schema/apollo.xsd=/META-INF/apollo-1.0.0.xsd
 
 基于XML配置的使用样例如下：
 
-{% highlight xml %}
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -177,7 +178,7 @@ http\://www.ctrip.com/schema/apollo.xsd=/META-INF/apollo-1.0.0.xsd
     <apollo:config namespaces="application" order="1"/>
     
 </beans>
-{% endhighlight %}
+```
 
 # 3. 基于Java配置的扩展
 
@@ -199,7 +200,7 @@ http\://www.ctrip.com/schema/apollo.xsd=/META-INF/apollo-1.0.0.xsd
 
 下面就是Apollo提供的`@EnableApolloConfig`注解，允许用户传入namespaces和order信息。
 
-{% highlight java %}
+```java
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
@@ -216,7 +217,7 @@ public @interface EnableApolloConfig {
    */
   int order() default Ordered.LOWEST_PRECEDENCE;
 }
-{% endhighlight %}
+```
 
 这里的关键点是在注解上使用了`@Import(ApolloConfigRegistrar.class)`，从而Spring在处理`@EnableApolloConfig`时会实例化并调用`ApolloConfigRegistrar`的方法。
 
@@ -229,7 +230,7 @@ Apollo的自定义ImportBeanDefinitionRegistrar实现（`ApolloConfigRegistrar`�
 1. 记录用户配置的namespace和order
 2. 向Spring注册Bean：PropertySourcesProcessor，这个bean后面会实际处理用户配置的namespace和order，从而完成配置注入到Spring中的功能
 
-{% highlight java %}
+```java
 public class ApolloConfigRegistrar implements ImportBeanDefinitionRegistrar {
   @Override
   public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
@@ -243,7 +244,7 @@ public class ApolloConfigRegistrar implements ImportBeanDefinitionRegistrar {
         PropertySourcesProcessor.class);
   }
 }
-{% endhighlight %}
+```
 
 ## 3.4 样例目录结构
 
@@ -255,11 +256,11 @@ public class ApolloConfigRegistrar implements ImportBeanDefinitionRegistrar {
 
 基于Java配置的使用样例如下：
 
-{% highlight java %}
+```java
 @Configuration
 @EnableApolloConfig(value = "application", order = 1)
 public class AppConfig {}
-{% endhighlight %}
+```
 
 # 4. Spring容器的扩展点
 
@@ -277,7 +278,7 @@ public class AppConfig {}
 
 Apollo就利用这个时间点把配置信息注入到Spring Property Sources中，从而用户的bean在真正实例化时，所有需要的配置信息已经准备好了。
 
-{% highlight java %}
+```java
 public class PropertySourcesProcessor implements BeanFactoryPostProcessor {
   private static final AtomicBoolean PROPERTY_SOURCES_INITIALIZED = new AtomicBoolean(false);
 
@@ -292,7 +293,7 @@ public class PropertySourcesProcessor implements BeanFactoryPostProcessor {
     initializePropertySources();
   }
 }
-{% endhighlight %}
+```
 
 
 ## 4.3 BeanPostProcessor
@@ -306,7 +307,7 @@ public class PropertySourcesProcessor implements BeanFactoryPostProcessor {
 
 Apollo提供了`@ApolloConfig`注解来实现实例化时注入Config对象实例，所以实现逻辑和`@Autowired`类似。
 
-{% highlight java %}
+```java
 public class ApolloAnnotationProcessor implements BeanPostProcessor {
   @Override
   public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
@@ -337,7 +338,7 @@ public class ApolloAnnotationProcessor implements BeanPostProcessor {
     }
   }
 }
-{% endhighlight %}
+```
 
 仔细阅读上面的代码就会发现Apollo在用户bean初始化前会根据`@ApolloConfig`的配置注入对应namespace的Config实例。
 
