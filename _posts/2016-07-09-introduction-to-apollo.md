@@ -2,13 +2,47 @@
 layout:     post
 title:      Apollo配置中心介绍
 date:       2016-07-09 14:00:00 +0800
-summary:    Apollo（阿波罗）是携程框架部门研发的开源配置管理中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性。本文主要对Apollo的核心概念和使用方法做了着重介绍。
+summary:    Apollo（阿波罗）是携程框架部门研发的开源配置管理中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性。本文主要对Apollo的核心概念、设计理念和使用方法做了着重介绍。
 categories:
 ---
 
 # 1、What is Apollo
+在正式开始介绍之前，先来看两个小故事。
 
-## 1.1 Apollo简介
+## 1.1 两个小故事
+
+### 1.1.1 第一个小故事
+
+小A是XX团队主力开发，有一天产品说要上线一个迪士尼门票内购功能。由于迪士尼门票很火爆，产品一拍脑袋说，每个用户限购5张！
+
+于是小A在代码里是这么写的:
+
+```java
+private static final int MAX_QTY_PER_USER = 5; //产品需求限购5张if (qty > MAX_QTY_PER_USER ) {    throw new IllegalStateException(        String.format("每个用户最多购买%d张!", MAX_QTY_PER_USER ));}
+```
+
+第二天中午，由于内购实在太火爆，产品急匆匆的跑过来对小A说，赶紧改成每人1张！
+
+小A只好放弃了午饭，改代码、回归测试、上线，整整花了1个小时才搞定。。。
+
+<img src="/images/2016-07-09/sad-emoji.png" alt="sad-emoji" style="width:240px">
+
+### 1.1.2 第二个小故事
+
+小B是YY团队主力开发，有一天产品说要上线一个欢乐谷门票内购功能。由于欢乐谷门票很火爆，产品一拍脑袋说，每个用户限购5张！小B吸取了小A的教训，二话不说把配置写在了Apollo配置中心：
+
+![key-in-apollo](/images/2016-07-09/key-in-apollo.png)
+
+第二天中午，由于内购实在太火爆，产品急匆匆的跑过来对小B说，赶紧改成每人1张！
+
+小B不紧不慢的说：10秒内搞定~
+
+<img src="/images/2016-07-09/happy-emoji.png" alt="happy-emoji" style="width:240px">
+
+
+## 1.2 Apollo简介
+
+相信通过上面的两个小故事，大家已经对Apollo能干啥有了一个基本的了解。
 
 Apollo（阿波罗）是携程框架部门研发的开源配置管理中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性。
 
@@ -21,7 +55,7 @@ Apollo支持4个维度管理Key-Value格式的配置：
 
 同时，Apollo基于开源模式开发，开源地址：<a href="https://github.com/ctripcorp/apollo" target="_blank">https://github.com/ctripcorp/apollo</a>
 
-## 1.2 配置基本概念
+## 1.3 配置基本概念
 
 既然是Apollo定位于配置中心，那么在这里有必要先简单介绍一下什么是配置。
 
@@ -50,27 +84,45 @@ Apollo支持4个维度管理Key-Value格式的配置：
 
 # 2、Why Apollo
 
-正是基于配置的特殊性，所以Apollo从设计开始就立志于成为一个有治理能力的配置发布平台，并且提供了以下的特性：
+正是基于配置的特殊性，所以Apollo从设计之初就立志于成为一个有治理能力的配置管理平台，目前提供了以下的特性：
 
-* **集中化配置管理**
+* **统一管理不同环境、不同集群的配置**
 	* Apollo提供了一个统一界面集中式管理不同环境（environment）、不同集群（cluster）、不同命名空间（namespace）的配置。
+	* 同一份代码部署在不同的集群，可以有不同的配置，比如zk的地址等
+	* 通过命名空间（namespace）可以很方便的支持多个不同应用共享同一份配置，同时还允许应用对共享的配置进行覆盖
+
+* **配置修改实时生效（热发布）**
+	* 用户在Apollo修改完配置并发布后，客户端能实时（1秒）接收到最新的配置，并通知到应用程序
 
 * **版本发布管理**
-	* 所有的配置发布都有版本概念，从而可以方便的支持配置的回滚。
+	* 所有的配置发布都有版本概念，从而可以方便地支持配置的回滚
 
-* **客户端实时更新**
-	* 用户在Apollo修改完配置并发布后，客户端能实时（1秒）接收到最新的配置，并通知到应用程序。
+* **灰度发布**
+	* 支持配置的灰度发布，比如点了发布后，只对部分应用实例生效，等观察一段时间没问题后再推给所有应用实例
 
-* **数据中心、业务集群切换**
-	* 通过配置不同的cluster，可以非常方便的支持同一个应用在不同集群的实例使用不同的配置。
-
-* **授权、审核、审计**
+* **权限管理、发布审核、操作审计**
 	* 应用和配置的管理都有完善的权限管理机制，对配置的管理还分为了编辑和发布两个环节，从而减少人为的错误。
-	* 所有的操作都有审计日志，可以方便的追踪问题。
+	* 所有的操作都有审计日志，可以方便的追踪问题
 
-* **支持.Net，Java应用**
-	* 考虑到携程目前主要还是Java和.Net应用为主，所以Apollo提供了这两个语言的客户端。（.Net客户端暂未开源）
-	* 不过客户端和服务端的通讯协议基于Http，所以可以很方便的开发出针对其它语言的客户端。
+* **客户端配置信息监控**
+	* 可以在界面上方便地看到配置在被哪些实例使用
+
+* **提供Java和.Net原生客户端**
+	* 提供了Java和.Net的原生客户端，方便应用集成
+	* 支持Spring Placeholder, Annotation和Spring Boot的ConfigurationProperties，方便应用使用（需要Spring 3.1.1+）
+	* 同时提供了Http接口，非Java和.Net应用也可以方便的使用
+
+* **提供开放平台API**
+	* Apollo自身提供了比较完善的统一配置管理界面，支持多环境、多数据中心配置管理、权限、流程治理等特性。
+	* 不过Apollo出于通用性考虑，对配置的修改不会做过多限制，只要符合基本的格式就能够保存。
+	* 在我们的调研中发现，对于有些使用方，它们的配置可能会有比较复杂的格式，而且对输入的值也需要进行校验后方可保存，如检查数据库、用户名和密码是否匹配。
+	* 对于这类应用，Apollo支持应用方通过开放接口在Apollo进行配置的修改和发布，并且具备完善的授权和权限控制
+
+* **部署简单**
+	* 配置中心作为基础服务，可用性要求非常高，这就要求Apollo对外部依赖尽可能地少
+	* 目前唯一的外部依赖是MySQL，所以部署非常简单，只要安装好Java和MySQL就可以让Apollo跑起来
+	* Apollo还提供了打包脚本，一键就可以生成所有需要的安装包，并且支持自定义运行时参数
+
 
 # 3、Apollo at a glance
 
@@ -84,9 +136,21 @@ Apollo支持4个维度管理Key-Value格式的配置：
 
 ![basic-architecture](/images/2016-07-09/basic-architecture.png)
 
+## 3.2 界面概览
+
+![portal-overview](/images/2016-07-09/portal-overview.png)
+
+上图是Apollo配置中心中一个项目的配置首页
+
+* 在页面左上方的环境列表模块展示了所有的环境和集群，用户可以随时切换。
+* 页面中央展示了两个namespace(application和FX.apollo)的配置信息，默认按照表格模式展示、编辑。用户也可以切换到文本模式，以文件形式查看、编辑。
+* 页面上可以方便地进行发布、回滚、灰度、授权、查看更改历史和发布历史等操作
+
 ## 3.2 添加/修改配置项
 
 用户可以通过配置中心界面方便的添加/修改配置项
+
+![edit-item-1](/images/2016-07-09/edit-item-1.png)
 
 ![edit-item](/images/2016-07-09/edit-item.png)
 
@@ -94,21 +158,36 @@ Apollo支持4个维度管理Key-Value格式的配置：
 
 通过配置中心发布配置
 
+![publish-items-1](/images/2016-07-09/publish-items-1.png)
+
 ![publish-items](/images/2016-07-09/publish-items.png)
 
-## 3.4 客户端获取配置
+## 3.4 客户端获取配置（Java API样例）
 
-配置发布后，就能在客户端获取到了，以Java为例，获取配置的示例代码如下。更多客户端使用说明请参见<a href="https://github.com/ctripcorp/apollo/blob/master/apollo-client/README.md" target="_blank">Java客户端使用文档</a>。
+配置发布后，就能在客户端获取到了，以Java API方式为例，获取配置的示例代码如下。更多客户端使用说明请参见<a href="https://github.com/ctripcorp/apollo/wiki/Java%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97" targ
+et="_blank">Java客户端使用指南</a>。
 
-<script src="https://gist.github.com/nobodyiam/3d6753b3839bee3c32bd0373c037b2cc.js"></script>
+```java
+Config config = ConfigService.getAppConfig();Integer defaultRequestTimeout = 200;Integer requestTimeout =          config.getIntProperty("request.timeout",defaultRequestTimeout);
+```
 
-## 3.5 客户端监听配置变化
+## 3.5 客户端监听配置变化（Java API样例）
 
 通过上述获取配置代码，应用就能实时获取到最新的配置了。
 
 不过在某些场景下，应用还需要在配置变化时获得通知，比如数据库连接的切换等，所以Apollo还提供了监听配置变化的功能，Java示例如下：
 
-<script src="https://gist.github.com/nobodyiam/723aa16ea33f552f794806c5f62648b5.js"></script>
+```java
+Config config = ConfigService.getAppConfig();config.addChangeListener(new ConfigChangeListener() {    @Override    public void onChange(ConfigChangeEvent changeEvent) {        for (String key : changeEvent.changedKeys()) {            ConfigChange change = changeEvent.getChange(key);            System.out.println(String.format(                “Found change - key: %s, oldValue: %s, newValue: %s, changeType: %s”,                 change.getPropertyName(), change.getOldValue(),                change.getNewValue(), change.getChangeType()));        }    }});
+```
+
+## 3.6 Spring集成样例Apollo和Spring也可以很方便地集成，只需要标注`@EnableApolloConfig`后就可以通过`@Value`获取配置信息：
+
+```java
+@Configuration@EnableApolloConfigpublic class AppConfig {}
+``````java
+@Componentpublic class SomeBean {    @Value("${request.timeout:200}")    private int timeout;    @ApolloConfigChangeListener    private void someChangeHandler(ConfigChangeEvent changeEvent) {        if (changeEvent.isChanged("request.timeout")) {            refreshTimeout();        }    }}
+```
 
 # 4、Apollo in depth
 
@@ -122,22 +201,27 @@ Apollo支持4个维度管理Key-Value格式的配置：
 
 1. **application (应用)**
 	* 使用配置的应用，每个应用管理自己应用所用到的所有配置。
-	* 应用需要有唯一标识 - appId，appId通过app.properties指定，具体信息请参见<a href="https://github.com/ctripcorp/apollo/blob/master/apollo-client/README.md" target="_blank">Java客户端使用文档</a>。
+	* 应用需要有唯一标识 - appId，appId通过app.properties指定，具体信息请参见<a href="https://github.com/ctripcorp/apollo/wiki/Java%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97" targ
+et="_blank">Java客户端使用指南</a>。
 
 2. **environment (环境)**
 	* 配置对应的环境，同一个配置在不同的环境可以有不一样的值。
-	* 应用在运行时需要指定环境，环境可以通过System Property或server.properties指定，具体信息请参见<a href="https://github.com/ctripcorp/apollo/blob/master/apollo-client/README.md" target="_blank">Java客户端使用文档</a>。
+	* 应用在运行时需要指定环境，环境可以通过System Property或server.properties指定，具体信息请参见<a href="https://github.com/ctripcorp/apollo/wiki/Java%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97" targ
+et="_blank">Java客户端使用指南</a>。
 
 3. **cluster (集群)**
 	* 一个应用下不同实例的分组，比如典型的可以按照数据中心分，把A机房的应用实例分为一个集群，把B机房的应用实例分为另一个集群。
-	* 对不同的cluster，同一个配置可以有不一样的值，如数据库地址。
-	* 应用在运行时可以指定集群，集群可以通过System Property或server.properties指定，具体信息请参见<a href="https://github.com/ctripcorp/apollo/blob/master/apollo-client/README.md" target="_blank">Java客户端使用文档</a>。
+	* 对不同的cluster，同一个配置可以有不一样的值，如zookeeper地址。
+	* 应用在运行时可以指定集群，集群可以通过System Property或server.properties指定，具体信息请参见<a href="https://github.com/ctripcorp/apollo/wiki/Java%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97" targ
+et="_blank">Java客户端使用指南</a>。
 
 4. **namespace (命名空间)**
 	* 一个应用下不同配置的分组，每个应用在Apollo创建后都会有一个默认的namespace - application。
-	* 应用也可以引入公共组件的配置namespace，如DAL，Hermes等，一旦引入过来，就可以对公共组件的配置做调整，如hermes producer的batch size。
+	* 应用也可以继承公共组件的配置namespace，如DAL，RPC等，一旦继承后，就可以对公共组件的配置做调整，如DAL的初始数据库连接数。
 
 ## 4.2 自定义Cluster
+
+>【本节内容仅对应用需要对不同集群应用不同配置才需要，如没有相关需求，可以跳过本节】
 
 比如我们有应用在A数据中心和B数据中心都有部署，那么如果希望两个数据中心的配置不一样的话，我们可以通过新建cluster来解决。
 
@@ -169,6 +253,8 @@ Apollo会默认使用应用实例所在的数据中心作为cluster，所以如�
 * 这里注意`apollo.cluster`为全小写
 
 ## 4.3 自定义Namespace
+
+>【本节仅对公共组件配置或需要多个应用共享配置才需要，如没有相关需求，可以跳过本节】
 
 如果应用有公共组件（如hermes-producer，cat-client等）供其它应用使用，就需要通过自定义namespace来实现公共组件的配置。
 
@@ -204,15 +290,37 @@ Namespace创建完，需要选择在哪些环境和集群下使用
 
 ### 4.3.5 客户端获取Namespace配置
 
-对自定义namespace的配置获取，稍有不同，需要程序传入namespace的名字。更多客户端使用说明请参见<a href="https://github.com/ctripcorp/apollo/blob/master/apollo-client/README.md" target="_blank">Java客户端使用文档</a>。
+对自定义namespace的配置获取，稍有不同，需要程序传入namespace的名字。更多客户端使用说明请参见<a href="https://github.com/ctripcorp/apollo/wiki/Java%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97" targ
+et="_blank">Java客户端使用指南</a>。
 
-<script src="https://gist.github.com/nobodyiam/32e77d92849c13d035943e249c82ddcf.js"></script>
+```java
+Config config = ConfigService.getConfig("FX.Hermes.Producer");
+Integer defaultSenderBatchSize = 200;
+Integer senderBatchSize = config.getIntProperty("sender.batchsize", defaultSenderBatchSize);
+```
 
 ### 4.3.6 客户端监听Namespace配置变化
 
-<script src="https://gist.github.com/nobodyiam/06bd94f5d253525ca9d3b37189229271.js"></script>
+```java
+Config config = ConfigService.getConfig("FX.Hermes.Producer");
+config.addChangeListener(new ConfigChangeListener() {
+  @Override
+  public void onChange(ConfigChangeEvent changeEvent) {
+    System.out.println("Changes for namespace " + changeEvent.getNamespace());
+    for (String key : changeEvent.changedKeys()) {
+      ConfigChange change = changeEvent.getChange(key);
+      System.out.println(String.format(
+        "Found change - key: %s, oldValue: %s, newValue: %s, changeType: %s",
+        change.getPropertyName(), change.getOldValue(),
+        change.getNewValue(), change.getChangeType()));
+     }
+  }
+});
+```
 
 ## 4.4 配置获取规则
+
+>【本节仅当应用自定义了集群或namespace才需要，如无相关需求，可以跳过本节】
 
 在有了cluster概念后，配置的规则就显得重要了。
 
@@ -226,7 +334,9 @@ Namespace创建完，需要选择在哪些环境和集群下使用
 
 当应用使用下面的语句获取配置时，我们称之为获取应用自身的配置，也就是应用自身的application namespace的配置。
 
-	Config config = ConfigService.getAppConfig();
+```java
+Config config = ConfigService.getAppConfig();
+```
 
 对这种情况的配置获取规则，简而言之如下：
 
@@ -246,7 +356,9 @@ Namespace创建完，需要选择在哪些环境和集群下使用
 
 以***FX.Hermes.Producer***为例，hermes producer是hermes发布的公共组件。当使用下面的语句获取配置时，我们称之为获取公共组件的配置。
 
-	Config config = ConfigService.getConfig("FX.Hermes.Producer");
+```java
+Config config = ConfigService.getConfig("FX.Hermes.Producer");
+```
 
 对这种情况的配置获取规则，简而言之如下：
 
@@ -264,10 +376,28 @@ Namespace创建完，需要选择在哪些环境和集群下使用
 
 ![overall-architecture](/images/2016-07-09/overall-architecture.png)
 
-* 基于Eureka和Spring Cloud Netflix提供服务注册和发现
-* Config Service和Admin Service会向meta server注册服务，并保持心跳
-* Portal通过域名访问Meta Server获取Admin Service服务列表（IP+Port），在Portal侧做load balance、错误重试
+上图是Apollo配置中心的总体设计图，我们可以从下往上看：
+
+* Config Service提供配置的读取、推送等功能，服务对象是Apollo客户端
+* Admin Service提供配置的修改、发布等功能，服务对象是Apollo Portal（管理界面）
+* Config Service和Admin Service都是多实例、无状态部署，所以需要将自己注册到Eureka中并保持心跳
+* 在Eureka之上我们架了一层Meta Server用于封装Eureka的服务发现接口
 * Client通过域名访问Meta Server获取Config Service服务列表（IP+Port），在Client侧做load balance、错误重试
+* Portal通过域名访问Meta Server获取Admin Service服务列表（IP+Port），在Portal侧做load balance、错误重试
+* 为了简化实际的部署，我们实际上会把Config Service、Eureka和Meta Server三个逻辑角色部署在一个JVM进程中
+
+### 4.5.1 Why Eureka
+
+为什么我们采用Eureka作为服务注册中心，而不是使用传统的zk、etcd呢？我大致总结了一下，有以下几方面的原因：
+
+* 它提供了完整的Service Registry和Service Discovery实现
+	* 首先是提供了完整的实现，并且也经受住了Netflix自己的生产环境考验，相对使用起来会比较省心。
+* 和Spring Cloud无缝集成
+	* 我们的项目本身就使用了Spring Cloud和Spring Boot，同时Spring Cloud还有一套非常完善的开源代码来整合Eureka，所以使用起来非常方便。
+	* 另外，Eureka还支持在我们应用自身的容器中启动，也就是说我们的应用启动完之后，既充当了Eureka的角色，同时也是服务的提供者。这样就极大的提高了服务的可用性。
+	* **这一点是我们选择Eureka而不是zk、etcd等的主要原因，为了提高配置中心的可用性和降低部署复杂度，我们需要尽可能地减少外部依赖。**
+* Open Source
+	* 最后一点是开源，由于代码是开源的，所以非常便于我们了解它的实现原理和排查问题。
 
 
 ## 4.6 客户端设计
@@ -276,37 +406,49 @@ Namespace创建完，需要选择在哪些环境和集群下使用
 
 上图简要描述了Apollo客户端的实现原理：
 
-1. 客户端会定时从Apollo配置中心服务端拉取应用的最新配置，并保存在内存中
-2. 客户端还和服务端保持了一个长连接，从而能第一时间获得配置更新的推送。（通过Http Long Polling实现）
-3. 客户端会把从服务端获取到的配置在本地文件系统缓存一份
-	* 在遇到服务不可用，或网络不通的时候，依然能从本地恢复配置
-4. 应用程序可以从Apollo客户端获取最新的配置、订阅配置更新通知
+1. 客户端和服务端保持了一个长连接，从而能第一时间获得配置更新的推送。
+2. 客户端还会定时从Apollo配置中心服务端拉取应用的最新配置。
+    * 这是一个fallback机制，为了防止推送机制失效导致配置不更新
+    * 客户端定时拉取会上报本地版本，所以一般情况下，对于定时拉取的操作，服务端都会返回304 - Not Modified
+    * 定时频率默认为每5分钟拉取一次，客户端也可以通过在运行时指定System Property: `apollo.refreshInterval`来覆盖，单位为分钟。
+3. 客户端从Apollo配置中心服务端获取到应用的最新配置后，会保存在内存中
+4. 客户端会把从服务端获取到的配置在本地文件系统缓存一份
+    * 在遇到服务不可用，或网络不通的时候，依然能从本地恢复配置
+5. 应用程序可以从Apollo客户端获取最新的配置、订阅配置更新通知
 
-# 5、Future
+### 4.6.1 配置更新推送实现
 
-Apollo还在持续的开发迭代中，未来我们会提供更多的功能，大致方向如下：
+前面提到了Apollo客户端和服务端保持了一个长连接，从而能第一时间获得配置更新的推送。
 
-* **版本回滚**
-	* 提供版本回滚的功能，从而当用户发现配置有问题后，可以方便地回退到上一个版本。
+长连接实际上我们是通过Http Long Polling实现的，具体而言：
 
-* **灰度发布**
-	* 支持配置的灰度发布，比如点了发布后，只对部分应用实例生效，等观察一段时间没问题后再推给所有应用实例。
+* 客户端发起一个Http请求到服务端
+* 服务端会保持住这个连接30秒
+* 如果在30秒内有客户端关心的配置变化，被保持住的客户端请求会立即返回，并告知客户端有配置变化的namespace信息
+* 如果在30秒内没有客户端关心的配置变化，那么会返回Http状态码304给客户端
+* 客户端在服务端请求返回后会自动重连
 
-* **配置运行时监控**
-	* 提供更多运行时监控的工具，比如能看到哪些应用实例在使用哪些cluster和namespace的配置。
+考虑到会有数万客户端向服务端发起长连，在服务端我们使用了async servlet(Spring DeferredResult)来服务Http Long Polling请求。
 
-* **应用配置迁移工具**
-	* 提供迁移工具，帮助已有的应用可以快速的把配置迁移到Apollo中。
+## 4.7 可用性考虑
 
-* **作为平台接入其它配置工具**
-	* 把配置作为服务提供出来，从而支持配置的多样化使用场景。
-	* 比如DAL的使用方可以在DAL平台做数据库相关信息的配置，在DAL做完相关的校验和验证后，输入到Apollo，最后通知到应用。
+配置中心作为基础服务，可用性要求非常高，下面的表格描述了不同场景下Apollo的可用性：
 
-# 6、Contribute to Apollo
+| 场景                   | 影响                                 | 降级                                  | 原因                                                                                    |
+|------------------------|--------------------------------------|---------------------------------------|-----------------------------------------------------------------------------------------|
+| 某台config service下线 | 无影响                               |                                       | Config service无状态，客户端重连其它config service                                      |
+| 所有config service下线 | 客户端无法读取最新配置，Portal无影响 | 客户端重启时,可以读取本地缓存配置文件 |                                                                                         |
+| 某台admin service下线  | 无影响                               |                                       | Admin service无状态，Portal重连其它admin service                                        |
+| 所有admin service下线  | 客户端无影响，portal无法更新配置     |                                       |                                                                                         |
+| 某台portal下线         | 无影响                               |                                       | Portal域名通过slb绑定多台服务器，重试后指向可用的服务器                                 |
+| 全部portal下线         | 客户端无影响，portal无法更新配置     |                                       |                                                                                         |
+| 某个数据中心下线       | 无影响                               |                                       | 多数据中心部署，数据完全同步，Meta Server/Portal域名通过slb自动切换到其它存活的数据中心 |
 
-Apollo是作为一个开源项目开发的，目前开发/测试/产品/运维总共两个人，所以也非常希望能有更多的力量投入进来。
+# 5、Contribute to Apollo
 
-目前服务端开发使用的是Java，基于Spring Cloud和Spring Boot框架。客户端目前提供了Java和.Net两种实现。
+Apollo从开发之初就是以开源模式开发的，所以也非常欢迎有兴趣、有余力的朋友一起加入进来。
+
+服务端开发使用的是Java，基于Spring Cloud和Spring Boot框架。客户端目前提供了Java和.Net两种实现。
 
 Github地址：<a href="https://github.com/ctripcorp/apollo" target="_blank">https://github.com/ctripcorp/apollo</a>
 
