@@ -12,7 +12,7 @@ categories:
 
 随着程序功能的日益复杂，程序的配置日益增多：各种功能的开关、参数的配置、服务器的地址……
 
-对程序配置的期望值也越来越高：配置修改后实时生效，分环境、分集群管理配置，完善的权限、审核机制……
+对程序配置的期望值也越来越高：配置修改后实时生效，灰度发布，分环境、分集群管理配置，完善的权限、审核机制……
 
 在这样的大环境下，传统的通过配置文件、数据库等方式已经越来越无法满足开发人员对配置管理的需求。
 
@@ -33,7 +33,7 @@ Apollo支持4个维度管理Key-Value格式的配置：
 
 ## 1.3 配置基本概念
 
-既然是Apollo定位于配置中心，那么在这里有必要先简单介绍一下什么是配置。
+既然Apollo定位于配置中心，那么在这里有必要先简单介绍一下什么是配置。
 
 按照我们的理解，配置有以下几个属性：
 
@@ -122,47 +122,87 @@ Apollo支持4个维度管理Key-Value格式的配置：
 * 页面中央展示了两个namespace(application和FX.apollo)的配置信息，默认按照表格模式展示、编辑。用户也可以切换到文本模式，以文件形式查看、编辑。
 * 页面上可以方便地进行发布、回滚、灰度、授权、查看更改历史和发布历史等操作
 
-## 3.2 添加/修改配置项
+## 3.3 添加/修改配置项
 
-用户可以通过配置中心界面方便的添加/修改配置项
+用户可以通过配置中心界面方便的添加/修改配置项：
 
 ![edit-item-1](/images/2016-07-09/edit-item-1.png)
 
+输入配置信息：
+
 ![edit-item](/images/2016-07-09/edit-item.png)
 
-## 3.3 发布配置
+## 3.4 发布配置
 
-通过配置中心发布配置
+通过配置中心发布配置：
 
 ![publish-items-1](/images/2016-07-09/publish-items-1.png)
 
+填写发布信息：
+
 ![publish-items](/images/2016-07-09/publish-items.png)
 
-## 3.4 客户端获取配置（Java API样例）
+## 3.5 客户端获取配置（Java API样例）
+
 
 配置发布后，就能在客户端获取到了，以Java API方式为例，获取配置的示例代码如下。更多客户端使用说明请参见<a href="https://github.com/ctripcorp/apollo/wiki/Java%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97" targ
 et="_blank">Java客户端使用指南</a>。
 
 ```java
-Config config = ConfigService.getAppConfig();Integer defaultRequestTimeout = 200;Integer requestTimeout =          config.getIntProperty("request.timeout",defaultRequestTimeout);
+Config config = ConfigService.getAppConfig();
+Integer defaultRequestTimeout = 200;
+Integer requestTimeout = 
+         config.getIntProperty("request.timeout",defaultRequestTimeout);
 ```
 
-## 3.5 客户端监听配置变化（Java API样例）
+## 3.6 客户端监听配置变化（Java API样例）
+
 
 通过上述获取配置代码，应用就能实时获取到最新的配置了。
 
 不过在某些场景下，应用还需要在配置变化时获得通知，比如数据库连接的切换等，所以Apollo还提供了监听配置变化的功能，Java示例如下：
 
 ```java
-Config config = ConfigService.getAppConfig();config.addChangeListener(new ConfigChangeListener() {    @Override    public void onChange(ConfigChangeEvent changeEvent) {        for (String key : changeEvent.changedKeys()) {            ConfigChange change = changeEvent.getChange(key);            System.out.println(String.format(                “Found change - key: %s, oldValue: %s, newValue: %s, changeType: %s”,                 change.getPropertyName(), change.getOldValue(),                change.getNewValue(), change.getChangeType()));        }    }});
+Config config = ConfigService.getAppConfig();
+config.addChangeListener(new ConfigChangeListener() {
+    @Override
+    public void onChange(ConfigChangeEvent changeEvent) {
+        for (String key : changeEvent.changedKeys()) {
+            ConfigChange change = changeEvent.getChange(key);
+            System.out.println(String.format(
+                "Found change - key: %s, oldValue: %s, newValue: %s, changeType: %s", 
+                change.getPropertyName(), change.getOldValue(),
+                change.getNewValue(), change.getChangeType()));
+        }
+    }
+});
 ```
 
-## 3.6 Spring集成样例Apollo和Spring也可以很方便地集成，只需要标注`@EnableApolloConfig`后就可以通过`@Value`获取配置信息：
+## 3.7 Spring集成样例
+
+Apollo和Spring也可以很方便地集成，只需要标注`@EnableApolloConfig`后就可以通过`@Value`获取配置信息：
 
 ```java
-@Configuration@EnableApolloConfigpublic class AppConfig {}
-``````java
-@Componentpublic class SomeBean {    @Value("${request.timeout:200}")    private int timeout;    @ApolloConfigChangeListener    private void someChangeHandler(ConfigChangeEvent changeEvent) {        if (changeEvent.isChanged("request.timeout")) {            refreshTimeout();        }    }}
+@Configuration
+@EnableApolloConfig
+public class AppConfig {}
+
+```
+
+```java
+@Component
+public class SomeBean {
+    @Value("${request.timeout:200}")
+    private int timeout;
+
+    @ApolloConfigChangeListener
+    private void someChangeHandler(ConfigChangeEvent changeEvent) {
+        if (changeEvent.isChanged("request.timeout")) {
+            refreshTimeout();
+        }
+    }
+}
+
 ```
 
 # 4、Apollo in depth
@@ -294,6 +334,29 @@ config.addChangeListener(new ConfigChangeListener() {
 });
 ```
 
+### 4.3.7 Spring集成样例
+
+```java
+@Configuration
+@EnableApolloConfig("FX.Hermes.Producer")
+public class AppConfig {}
+```
+
+```java
+@Component
+public class SomeBean {
+    @Value("${request.timeout:200}")
+    private int timeout;
+
+    @ApolloConfigChangeListener("FX.Hermes.Producer")
+    private void someChangeHandler(ConfigChangeEvent changeEvent) {
+        if (changeEvent.isChanged("request.timeout")) {
+            refreshTimeout();
+        }
+    }
+}
+```
+
 ## 4.4 配置获取规则
 
 >【本节仅当应用自定义了集群或namespace才需要，如无相关需求，可以跳过本节】
@@ -352,14 +415,14 @@ Config config = ConfigService.getConfig("FX.Hermes.Producer");
 
 ![overall-architecture](/images/2016-07-09/overall-architecture.png)
 
-上图是Apollo配置中心的总体设计图，我们可以从下往上看：
+上图简要描述了Apollo的总体设计，我们可以从下往上看：
 
 * Config Service提供配置的读取、推送等功能，服务对象是Apollo客户端
 * Admin Service提供配置的修改、发布等功能，服务对象是Apollo Portal（管理界面）
 * Config Service和Admin Service都是多实例、无状态部署，所以需要将自己注册到Eureka中并保持心跳
 * 在Eureka之上我们架了一层Meta Server用于封装Eureka的服务发现接口
-* Client通过域名访问Meta Server获取Config Service服务列表（IP+Port），在Client侧做load balance、错误重试
-* Portal通过域名访问Meta Server获取Admin Service服务列表（IP+Port），在Portal侧做load balance、错误重试
+* Client通过域名访问Meta Server获取Config Service服务列表（IP+Port），而后直接通过IP+Port访问服务，同时在Client侧会做load balance、错误重试
+* Portal通过域名访问Meta Server获取Admin Service服务列表（IP+Port），而后直接通过IP+Port访问服务，同时在Portal侧会做load balance、错误重试
 * 为了简化实际的部署，我们实际上会把Config Service、Eureka和Meta Server三个逻辑角色部署在一个JVM进程中
 
 ### 4.5.1 Why Eureka
