@@ -216,24 +216,26 @@ public class SomeBean {
 在介绍高级特性前，我们有必要先来了解一下Apollo中的几个核心概念：
 
 1. **application (应用)**
-	* 使用配置的应用，每个应用管理自己应用所用到的所有配置。
-	* 应用需要有唯一标识 - appId，appId通过app.properties指定，具体信息请参见<a href="https://github.com/ctripcorp/apollo/wiki/Java%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97" targ
+	* 这个很好理解，就是实际使用配置的应用，Apollo客户端在运行时需要知道当前应用是谁，从而可以去获取对应的配置
+	* 每个应用都需要有唯一的身份标识 - appId，我们认为应用身份是跟着代码走的，所以需要在代码中配置，具体信息请参见<a href="https://github.com/ctripcorp/apollo/wiki/Java%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97" targ
 et="_blank">Java客户端使用指南</a>。
 
 2. **environment (环境)**
-	* 配置对应的环境，同一个配置在不同的环境可以有不一样的值。
-	* 应用在运行时需要指定环境，环境可以通过System Property或server.properties指定，具体信息请参见<a href="https://github.com/ctripcorp/apollo/wiki/Java%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97" targ
+	* 配置对应的环境，Apollo客户端在运行时需要知道当前应用处于哪个环境，从而可以去获取应用的配置
+	* 我们认为环境和代码无关，同一份代码部署在不同的环境就应该能够获取到不同环境的配置
+	* 所以环境默认是通过读取机器上的配置（server.properties中的env属性）指定的，不过为了开发方便，我们也支持运行时通过System Property等指定，具体信息请参见<a href="https://github.com/ctripcorp/apollo/wiki/Java%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97" targ
 et="_blank">Java客户端使用指南</a>。
 
 3. **cluster (集群)**
-	* 一个应用下不同实例的分组，比如典型的可以按照数据中心分，把A机房的应用实例分为一个集群，把B机房的应用实例分为另一个集群。
+	* 一个应用下不同实例的分组，比如典型的可以按照数据中心分，把上海机房的应用实例分为一个集群，把北京机房的应用实例分为另一个集群。
 	* 对不同的cluster，同一个配置可以有不一样的值，如zookeeper地址。
-	* 应用在运行时可以指定集群，集群可以通过System Property或server.properties指定，具体信息请参见<a href="https://github.com/ctripcorp/apollo/wiki/Java%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97" targ
+	* 集群默认是通过读取机器上的配置（server.properties中的idc属性）指定的，不过也支持运行时通过System Property指定，具体信息请参见<a href="https://github.com/ctripcorp/apollo/wiki/Java%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97" targ
 et="_blank">Java客户端使用指南</a>。
 
 4. **namespace (命名空间)**
-	* 一个应用下不同配置的分组，每个应用在Apollo创建后都会有一个默认的namespace - application。
-	* 应用也可以继承公共组件的配置namespace，如DAL，RPC等，一旦继承后，就可以对公共组件的配置做调整，如DAL的初始数据库连接数。
+	* 一个应用下不同配置的分组，可以简单地把namespace类比为文件，不同类型的配置存放在不同的文件中，如数据库配置文件，rpc配置文件，应用自身的配置文件等
+	* 应用可以直接读取到公共组件的配置namespace，如DAL，RPC等
+	* 应用也可以通过继承公共组件的配置namespace来对公共组件的配置做调整，如DAL的初始数据库连接数
 
 ## 4.2 自定义Cluster
 
@@ -423,7 +425,7 @@ Config config = ConfigService.getConfig("FX.Hermes.Producer");
 * 在Eureka之上我们架了一层Meta Server用于封装Eureka的服务发现接口
 * Client通过域名访问Meta Server获取Config Service服务列表（IP+Port），而后直接通过IP+Port访问服务，同时在Client侧会做load balance、错误重试
 * Portal通过域名访问Meta Server获取Admin Service服务列表（IP+Port），而后直接通过IP+Port访问服务，同时在Portal侧会做load balance、错误重试
-* 为了简化实际的部署，我们实际上会把Config Service、Eureka和Meta Server三个逻辑角色部署在一个JVM进程中
+* 为了简化部署，我们实际上会把Config Service、Eureka和Meta Server三个逻辑角色部署在同一个JVM进程中
 
 ### 4.5.1 Why Eureka
 
@@ -463,7 +465,7 @@ Config config = ConfigService.getConfig("FX.Hermes.Producer");
 
 * 客户端发起一个Http请求到服务端
 * 服务端会保持住这个连接30秒
-* 如果在30秒内有客户端关心的配置变化，被保持住的客户端请求会立即返回，并告知客户端有配置变化的namespace信息
+* 如果在30秒内有客户端关心的配置变化，被保持住的客户端请求会立即返回，并告知客户端有配置变化的namespace信息，客户端会据此拉取对应namespace的最新配置
 * 如果在30秒内没有客户端关心的配置变化，那么会返回Http状态码304给客户端
 * 客户端在服务端请求返回后会自动重连
 
