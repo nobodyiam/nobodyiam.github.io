@@ -391,7 +391,8 @@ public class RefreshableDataSourceConfiguration {
 
   @Bean
   public DynamicDataSource dataSource(DataSourceManager dataSourceManager) {
-    return new DynamicDataSource(dataSourceManager.createDataSource());
+    DataSource actualDataSource = dataSourceManager.createDataSource();
+    return new DynamicDataSource(actualDataSource);
   }
 }
 ```
@@ -493,8 +494,11 @@ minimumIdle = 10
 2. 配置中心的一般模样
 	* 以Apollo为例子，介绍了配置中心所具备的特征
 	* 介绍了Apollo是如何实现高可用和实时性的
-3. 配置中心的案例集锦
+3. 如何让微服务更『智能』？
 	* 通过几个案例，分享了如何借助于配置中心使微服务更『智能』
 4. 配置中心的最佳实践
+   * 公共组件的配置
+   * 灰度发布
+   * 发布审核
 
 最后，希望大家在平时工作中都能用好配置中心，更好地服务于业务场景，使微服务更『智能』，实现从青铜到王者的跨越！
