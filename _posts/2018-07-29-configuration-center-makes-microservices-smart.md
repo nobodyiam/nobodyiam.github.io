@@ -219,7 +219,7 @@ Admin Service在配置发布后，需要通知所有的Config Service有配置�
 
 <img src="/images/2018-07-29/release-message-design.png" alt="release-message-design" style="max-width: 400px;">
 
-# 4. 案例集锦
+# 4. 如何让微服务更『智能』？
 
 接下来我们来看一下结合配置中心，我们能做哪些有趣的事情，让微服务更智能。
 
@@ -460,6 +460,8 @@ maximumPoolSize = 20
 minimumIdle = 10
 ```
 
+![public-namespace](/images/2018-07-29/public-namespace.png)
+
 通过这种方式的好处是不管是中间件团队，还是应用开发，都可以灵活地动态调整公共组件的配置。
 
 ## 5.2 灰度发布
@@ -468,9 +470,17 @@ minimumIdle = 10
 
 对于公共组件的配置，建议先在一个或多个应用上生效后观察效果，没有问题再推给所有的应用。
 
+![canary-release](/images/2018-07-29/canary-release.png)
+
+*[图片来源](http://www.appadhoc.com/blog/one-page-canary-release-test/)*
+
 ## 5.3 发布审核
 
 生产环境建议启用发布审核功能，简单而言就是如果某个人修改了配置，那么必须由另一个人审核后才可以发布，以避免由于头脑不清醒、手一抖之类的造成生产事故。
+
+![approval](/images/2018-07-29/approval.png)
+
+*[图片来源](https://livinator.com/5-tips-to-get-easier-hoa-approval-for-your-home-renovations/)*
 
 # 6. 结语
 
