@@ -398,6 +398,28 @@ public class RefreshableDataSourceConfiguration {
 ```
 
 ```java
+public class DynamicDataSource implements DataSource {
+  private final AtomicReference<DataSource> dataSourceAtomicReference;
+
+  public DynamicDataSource(DataSource dataSource) {
+    dataSourceAtomicReference = new AtomicReference<>(dataSource);
+  }
+
+  // set the new data source and return the previous one
+  public DataSource setDataSource(DataSource newDataSource){
+    return dataSourceAtomicReference.getAndSet(newDataSource);
+  }
+
+  @Override
+  public Connection getConnection() throws SQLException {
+    return dataSourceAtomicReference.get().getConnection();
+  }
+
+  ...
+}
+```
+
+```java
   @ApolloConfigChangeListener
   public void onChange(ConfigChangeEvent changeEvent) {
     boolean dataSourceConfigChanged = false;
