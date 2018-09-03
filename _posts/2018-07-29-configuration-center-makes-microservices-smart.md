@@ -483,7 +483,7 @@ maximumPoolSize = 20
 minimumIdle = 10
 ```
 
-![public-namespace](/images/2018-07-29/public-namespace.png)
+<img src="/images/2018-07-29/public-namespace.png" alt="public-namespace" style="max-width: 720px;">
 
 通过这种方式的好处是不管是中间件团队，还是应用开发，都可以灵活地动态调整公共组件的配置。
 
