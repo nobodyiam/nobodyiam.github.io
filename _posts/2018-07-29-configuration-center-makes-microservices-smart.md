@@ -47,7 +47,7 @@ categories:
 
 ## 2.3 微服务的复杂性
 
-单体应用时代，应用数量比较少，还有可能让运维登上机器一台一台修改程序的配置文件。
+单体应用时代，应用数量比较少，配置也相对比较简单，还有可能让运维登上机器一台一台修改程序的配置文件。
 
 随着微服务的流行，大应用拆成小应用，小应用拆成多个独立的服务，导致微服务的节点数量非常多，配置也随着服务数量增加而急剧增长，再让运维登上机器一台一台手工修改配置不仅效率低，而且还容易出错。如果碰到了紧急事件需要大规模迅速修改配置，估计运维人员也只能两手一摊了。
 
@@ -101,7 +101,7 @@ Apollo配置中心的管理界面如下图所示，可以发现相应的治理�
 * Config Service提供配置的读取、推送等功能，服务对象是Apollo客户端
 * Admin Service提供配置的修改、发布等功能，服务对象是Apollo Portal（管理界面）
 * Config Service和Admin Service都是多实例、无状态部署，所以需要将自己注册到Eureka中并保持心跳
-* 在Eureka之上我们架了一层Meta Server用于封装Eureka的服务发现接口
+* 在Eureka之上我们架了一层Meta Server用于封装Eureka的服务发现接口，主要是为了让客户端和Eureka解耦
 * Client通过域名访问Meta Server获取Config Service服务列表（IP+Port），而后直接通过IP+Port访问服务，同时在Client侧会做load balance、错误重试
 * Portal通过域名访问Meta Server获取Admin Service服务列表（IP+Port），而后直接通过IP+Port访问服务，同时在Portal侧会做load balance、错误重试
 * 为了简化部署，我们实际上会把Config Service、Eureka和Meta Server三个逻辑角色部署在同一个JVM进程中
