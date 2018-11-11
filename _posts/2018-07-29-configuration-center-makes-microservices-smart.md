@@ -51,7 +51,7 @@ categories:
 
 随着微服务的流行，大应用拆成小应用，小应用拆成多个独立的服务，导致微服务的节点数量非常多，配置也随着服务数量增加而急剧增长，再让运维登上机器一台一台手工修改配置不仅效率低，而且还容易出错。如果碰到了紧急事件需要大规模迅速修改配置，估计运维人员也只能两手一摊了。
 
-![satellite-communication](/images/2018-07-29/microservices-architecture.png)
+![microservices-architecture](/images/2018-07-29/microservices-architecture.png)
 
 *[图片来源](https://www.nginx.com/blog/introduction-to-microservices/)*
 
