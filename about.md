@@ -18,7 +18,9 @@ permalink: /about/
 ### 演讲
 
  - QCon全球软件开发大会：[配置中心，让微服务更『智能』](https://2018.qconshanghai.com/presentation/799)
+    - [Slides](/slides/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83%EF%BC%8C%E8%AE%A9%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9B%B4%E3%80%8E%E6%99%BA%E8%83%BD%E3%80%8F.pdf)
  - 携程技术沙龙：[携程开源配置中心Apollo的设计与实现](http://www.itdks.com/dakalive/detail/3420)
+    - [Slides](/slides/%E5%BC%80%E6%BA%90%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83Apollo%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0.pdf)
  - Spring Cloud中国社区沙龙：[基于Spring Cloud的Apollo配置中心介绍](http://www.itdks.com/dakalive/detail/929)
 
 ### 文章
