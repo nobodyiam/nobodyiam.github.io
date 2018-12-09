@@ -25,6 +25,7 @@ permalink: /about/
 
 ### 文章
 
+ - [GitHub 9K Star！Apollo作者手把手教你微服务配置中心之道](https://mp.weixin.qq.com/s?__biz=MjM5MDE0Mjc4MA==&mid=2651011525&idx=1&sn=27329c8a7ee88c3440d139ecbbf98af8)
  - [开源配置中心Apollo的设计与实现](https://mp.weixin.qq.com/s?__biz=MzI4MTY5NTk4Ng==&mid=2247489308&amp;idx=1&amp;sn=aea4b66490c4940f6b3c4d5fa1d2972d)
  - [深度剖析服务发现组件Netflix Eureka](https://mp.weixin.qq.com/s/6DiMiT8AynECNcGRR75XFQ)
  - [Tomcat类加载机制触发的Too many open files问题分析](https://mp.weixin.qq.com/s?__biz=MzI4MTY5NTk4Ng==&mid=2247489529&amp;idx=1&amp;sn=5efe82073f4a421ebb0f5c2402565358)
