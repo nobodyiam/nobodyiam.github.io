@@ -97,7 +97,7 @@ Istio 以其前瞻的设计结合云原生的概念，一出现就让人眼前�
 
 ![vm.png](/images/2019-11-30/vm.png)  ![standalone-service-registry.png](/images/2019-11-30/standalone-service-registry.png)
 
-                                [图片来源](https://medium.com/next-level-german-engineering/comparison-of-two-different-approaches-towards-container-management-4e5298736d42)                                                                        _独立的服务注册中心_
+                                [图片来源](https://medium.com/next-level-german-engineering/comparison-of-two-different-approaches-towards-container-management-4e5298736d42)                                                                     _独立的服务注册中心_
 
 ### 3.3.2 云原生方案离生产级尚有一定距离
 
