@@ -5,11 +5,11 @@ permalink: /about/
 
 ### 简介
 
-宋顺，携程框架架构研发部技术专家，开源配置中心Apollo作者。
+宋顺，蚂蚁金服高级技术专家，开源配置中心Apollo作者。
 
-2016年初加入携程，主要负责中间件产品的相关研发工作。
+2019年初加入蚂蚁金服，主要负责微服务相关产品的研发工作。
 
-毕业于复旦大学软件工程系，曾就职于大众点评，担任后台系统的技术负责人。
+毕业于复旦大学软件工程系，曾就职于大众点评、携程，负责后台系统、中间件等研发工作。
 
 ### 开源项目
 
@@ -17,6 +17,8 @@ permalink: /about/
 
 ### 演讲
 
+ - Service Mesh Meetup：[Service Mesh 在『路口』的产品思考与实践](https://tech.antfin.com/community/activities/985/review/950)
+     - [Slides](https://myslide.cn/slides/21983)
  - QCon全球软件开发大会：[配置中心，让微服务更『智能』](https://2018.qconshanghai.com/presentation/799)
     - [Slides](https://myslide.cn/slides/10035)
  - 携程技术沙龙：[携程开源配置中心Apollo的设计与实现](http://www.itdks.com/dakalive/detail/3420)
