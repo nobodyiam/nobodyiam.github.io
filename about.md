@@ -27,6 +27,7 @@ permalink: /about/
 
 ### 文章
 
+ - [Service Mesh 在『路口』的产品思考与实践](<https://mp.weixin.qq.com/s/WitivwLk_caMA0mxGQZlRA>)
  - [GitHub 9K Star！Apollo作者手把手教你微服务配置中心之道](https://mp.weixin.qq.com/s?__biz=MjM5MDE0Mjc4MA==&mid=2651011525&idx=1&sn=27329c8a7ee88c3440d139ecbbf98af8)
  - [开源配置中心Apollo的设计与实现](https://mp.weixin.qq.com/s?__biz=MzI4MTY5NTk4Ng==&mid=2247489308&amp;idx=1&amp;sn=aea4b66490c4940f6b3c4d5fa1d2972d)
  - [深度剖析服务发现组件Netflix Eureka](https://mp.weixin.qq.com/s/6DiMiT8AynECNcGRR75XFQ)
