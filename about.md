@@ -17,7 +17,8 @@ permalink: /about/
 
 ### 演讲
 
- - Service Mesh Meetup：[Service Mesh 在『路口』的产品思考与实践](https://tech.antfin.com/community/activities/985/review/950)
+ - QCon全球软件开发大会：[蚂蚁集团 SOFAStack Mesh 大规模落地实践与展望](https://qcon.infoq.cn/2020/shanghai/presentation/2837)
+ - Service Mesh Meetup：[Service Mesh 在『路口』的产品思考与实践](https://tech.antfin.com/community/activities/985/review/954)
      - [Slides](https://myslide.cn/slides/21983)
  - QCon全球软件开发大会：[配置中心，让微服务更『智能』](https://2018.qconshanghai.com/presentation/799)
     - [Slides](https://myslide.cn/slides/10035)
