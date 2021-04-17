@@ -275,7 +275,7 @@ public class AppConfig {}
 
 `BeanFactoryPostProcessor`提供了一个方法：`postProcessBeanFactory`。
 
-这个方法会被Spring在容器初始化过程中调用，调用时机是所有bean的定义信息都已经初始化好，但是这些bean还没有实例化。
+这个方法会被Spring在容器初始化过程中调用，调用时机是所有bean的定义信息都已经加载好，但是这些bean还没有实例化。
 
 Apollo就利用这个时间点把配置信息注入到Spring Property Sources中，从而用户的bean在真正实例化时，所有需要的配置信息已经准备好了。
 
