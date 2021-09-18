@@ -17,13 +17,16 @@ permalink: /about/
 
 ### 演讲
 
+ - OpenInfra Asia: [Layotto - A new chapter of Service Mesh and Application Runtime](https://www.youtube.com/watch?v=5v8gTrFUDk8)
+   - [Slides](/slides/layotto-a-new-chapter-of-service-mesh-and-application-runtime.pdf)
  - QCon全球软件开发大会：[蚂蚁集团 SOFAStack Mesh 大规模落地实践与展望](https://qcon.infoq.cn/2020/shanghai/presentation/2837)
+   - [Slides](/slides/large-scale-implementation-and-prospect-of-sofastack-mesh.pdf)
  - Service Mesh Meetup：[Service Mesh 在『路口』的产品思考与实践](https://tech.antfin.com/community/activities/985/review/954)
-     - [Slides](https://myslide.cn/slides/21983)
+   - [Slides](/slides/service-mesh-product-thought-pratice-in-crossroad.pdf)
  - QCon全球软件开发大会：[配置中心，让微服务更『智能』](https://2018.qconshanghai.com/presentation/799)
-    - [Slides](https://myslide.cn/slides/10035)
+   - [Slides](/slides/configuration-center-makes-microservices-smart.pdf)
  - 携程技术沙龙：[携程开源配置中心Apollo的设计与实现](http://www.itdks.com/dakalive/detail/3420)
-    - [Slides](https://myslide.cn/slides/10168)
+   - [Slides](/slides/design-and-implementation-of-apollo.pdf)
  - Spring Cloud中国社区沙龙：[基于Spring Cloud的Apollo配置中心介绍](http://www.itdks.com/dakalive/detail/929)
 
 ### 文章
