@@ -17,6 +17,8 @@ permalink: /about/
 
 ### 演讲
 
+ - KubeCon + CloudNativeCon: [WebAssembly + Application Runtime = A New Era of FaaS?](https://www.youtube.com/watch?v=g01CJ4S9Qao)
+   - [Slides](/slides/webassembly-plus-application-runtime-a-new-era-of-faas.pdf)
  - OpenInfra Asia: [Layotto - A new chapter of Service Mesh and Application Runtime](https://www.youtube.com/watch?v=5v8gTrFUDk8)
    - [Slides](/slides/layotto-a-new-chapter-of-service-mesh-and-application-runtime.pdf)
  - QCon全球软件开发大会：[蚂蚁集团 SOFAStack Mesh 大规模落地实践与展望](https://qcon.infoq.cn/2020/shanghai/presentation/2837)
