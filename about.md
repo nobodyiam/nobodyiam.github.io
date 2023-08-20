@@ -17,6 +17,8 @@ permalink: /about/
 
 ### 演讲
 
+ - CCF 中国开源大会：[消失的艺术：云原生中的运行时与 Serverless](https://dl.ccf.org.cn/video/videoDetail.html?_ack=1&id=6256027022641152)
+   - [Slides](/slides/the-art-of-disappearance-runtime-and-serverless-ccf-in-cloud-native.pdf)
  - KubeCon + CloudNativeCon: [WebAssembly + Application Runtime = A New Era of FaaS?](https://www.youtube.com/watch?v=g01CJ4S9Qao)
    - [Slides](/slides/webassembly-plus-application-runtime-a-new-era-of-faas.pdf)
  - OpenInfra Asia: [Layotto - A new chapter of Service Mesh and Application Runtime](https://www.youtube.com/watch?v=5v8gTrFUDk8)
@@ -33,6 +35,7 @@ permalink: /about/
 
 ### 文章
 
+ - [SOFAStack 的下一个五年](https://mp.weixin.qq.com/s/5aVtoQzJoyblBcbEDg0vXA)
  - [蚂蚁 Service Mesh 大规模落地实践与展望](https://mp.weixin.qq.com/s/rLY2mt0eSQUnUDrEaCwlCw)
  - [Service Mesh 在『路口』的产品思考与实践](https://mp.weixin.qq.com/s/WitivwLk_caMA0mxGQZlRA)
  - [GitHub 9K Star！Apollo作者手把手教你微服务配置中心之道](https://mp.weixin.qq.com/s?__biz=MjM5MDE0Mjc4MA==&mid=2651011525&idx=1&sn=27329c8a7ee88c3440d139ecbbf98af8)
