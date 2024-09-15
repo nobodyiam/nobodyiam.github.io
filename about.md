@@ -5,7 +5,7 @@ permalink: /about/
 
 ### 简介
 
-宋顺，蚂蚁集团资深技术专家，Apollo Config PMC。
+宋顺（花名：齐天），蚂蚁集团资深技术专家，Apollo Config PMC。
 
 在微服务架构、分布式计算等领域有着丰富的经验，2019 年加入蚂蚁集团，目前专注于云原生和微服务方向，如 Service Mesh、Serverless、Application Runtime 等。
 
