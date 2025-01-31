@@ -42,3 +42,7 @@ permalink: /about/
  - [开源配置中心Apollo的设计与实现](https://mp.weixin.qq.com/s?__biz=MzI4MTY5NTk4Ng==&mid=2247489308&amp;idx=1&amp;sn=aea4b66490c4940f6b3c4d5fa1d2972d)
  - [深度剖析服务发现组件Netflix Eureka](https://mp.weixin.qq.com/s/6DiMiT8AynECNcGRR75XFQ)
  - [Tomcat类加载机制触发的Too many open files问题分析](https://mp.weixin.qq.com/s?__biz=MzI4MTY5NTk4Ng==&mid=2247489529&amp;idx=1&amp;sn=5efe82073f4a421ebb0f5c2402565358)
+
+### 专利
+
+ - [CN111510478A](http://epub.cnipa.gov.cn/patent/CN111510478A)
