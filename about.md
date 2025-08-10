@@ -35,6 +35,7 @@ permalink: /about/
 
 ### 文章
 
+ - [拥抱 AGI 时代的中间层⼒量：AI 中间件的机遇与挑战](https://mp.weixin.qq.com/s/e0RTnBgQVqD8UiUNsYbX6w)
  - [SOFAStack 的下一个五年](https://mp.weixin.qq.com/s/5aVtoQzJoyblBcbEDg0vXA)
  - [蚂蚁 Service Mesh 大规模落地实践与展望](https://mp.weixin.qq.com/s/rLY2mt0eSQUnUDrEaCwlCw)
  - [Service Mesh 在『路口』的产品思考与实践](https://mp.weixin.qq.com/s/WitivwLk_caMA0mxGQZlRA)
@@ -42,6 +43,10 @@ permalink: /about/
  - [开源配置中心Apollo的设计与实现](https://mp.weixin.qq.com/s?__biz=MzI4MTY5NTk4Ng==&mid=2247489308&amp;idx=1&amp;sn=aea4b66490c4940f6b3c4d5fa1d2972d)
  - [深度剖析服务发现组件Netflix Eureka](https://mp.weixin.qq.com/s/6DiMiT8AynECNcGRR75XFQ)
  - [Tomcat类加载机制触发的Too many open files问题分析](https://mp.weixin.qq.com/s?__biz=MzI4MTY5NTk4Ng==&mid=2247489529&amp;idx=1&amp;sn=5efe82073f4a421ebb0f5c2402565358)
+
+### 论文
+
+ - [OSDI] Xiaohu Chai, Tianyu Zhou, Keyang Hu, Jianfeng Tan, Tiwei Bie, Anqi Shen, Dawei Shen, Qi Xing, Shun Song, Tongkai Yang, Le Gao, Feng Yu, Zhengyu He, Dong Du, Yubin Xia, Kang Chen, Yu Chen. Fork in the Road: Reflections and Optimizations for Cold Start Latency in Production Serverless Systems. OSDI, 2025
 
 ### 专利
 
