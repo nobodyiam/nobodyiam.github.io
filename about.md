@@ -48,8 +48,9 @@ permalink: /about/
 
 ### 论文
 
- - [OSDI] Xiaohu Chai, Tianyu Zhou, Keyang Hu, Jianfeng Tan, Tiwei Bie, Anqi Shen, Dawei Shen, Qi Xing, **Shun Song**, Tongkai Yang, Le Gao, Feng Yu, Zhengyu He, Dong Du, Yubin Xia, Kang Chen, and Yu Chen. 2025. [Fork in the Road: Reflections and Optimizations for Cold Start Latency in Production Serverless Systems](https://www.usenix.org/conference/osdi25/presentation/chai-xiaohu). In Proceedings of the 19th USENIX Symposium on Operating Systems Design and Implementation (OSDI ’25), pages 499–518, Boston, MA, USA. USENIX Association.
+ - [ICDE] Pengwei Wang, Nuo Chen, Haoquan Qi, Yichen Zhong, and **Shun Song**. 2026. [Contemp: Instance Caching Based on Container Temperature in Serverless Environment](https://icde2026.github.io/accepted-papers.html). To appear in Proceedings of the 42nd IEEE International Conference on Data Engineering (ICDE ’26), Montréal, Canada. IEEE.
  - [EMNLP] Sheng Zhang, Yifan Ding, Shuquan Lian, **Shun Song**, and Hui Li. 2025. [CodeRAG: Finding Relevant and Necessary Knowledge for Retrieval-Augmented Repository-Level Code Completion](https://aclanthology.org/2025.emnlp-main.1187/). In Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing, pages 23289–23299, Suzhou, China. Association for Computational Linguistics.
+ - [OSDI] Xiaohu Chai, Tianyu Zhou, Keyang Hu, Jianfeng Tan, Tiwei Bie, Anqi Shen, Dawei Shen, Qi Xing, **Shun Song**, Tongkai Yang, Le Gao, Feng Yu, Zhengyu He, Dong Du, Yubin Xia, Kang Chen, and Yu Chen. 2025. [Fork in the Road: Reflections and Optimizations for Cold Start Latency in Production Serverless Systems](https://www.usenix.org/conference/osdi25/presentation/chai-xiaohu). In Proceedings of the 19th USENIX Symposium on Operating Systems Design and Implementation (OSDI ’25), pages 499–518, Boston, MA, USA. USENIX Association.
 
 ### 专利
 
